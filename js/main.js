@@ -18,14 +18,15 @@ var url = document.getElementById('url'),                         // url input f
     userName = document.myform.userName,                    // user name input
 
     // main page elements.
-    welcomeDiv = document.getElementById('welcome'),
-    connectDiv = document.getElementById('createConnection'),
-    messageDiv = document.getElementById('createMessage'),
-    usersDiv = document.getElementById('userlist'),
-    posts = document.getElementById('posts'),
+    connectArticle = document.getElementById('createConnection'),
+    messageArticle = document.getElementById('createMessage'),
+
+    // User information divs
     userCounterDiv = document.getElementById('userCounter'),
+    usersDiv = document.getElementById('userlist'),
 
-
+    // Chat divs
+    posts = document.getElementById('posts'),                   // Posts in chat
     content = document.getElementById('message'),           // message content
 
     // user feedback and status modifications
@@ -63,14 +64,13 @@ var nl2br = function (str) {
  */
 var setLoggedOffProperties = function() {
     disconnect.className = 'hidden';  // hide disconnect button
-    messageDiv.className ='hidden'; // hide message
+    messageArticle.className ='hidden'; // hide message
+    connectArticle.className ='mainPageContainer';
     content.value = '';                         // Clear message input field.
     posts.innerHTML = '---> Welcome to the Websocket chat.';
-    userCounterDiv.innerHTML = '';
+    userCounterDiv.innerHTML = '...';
     usersDiv.innerHTML = 'Login to chat.';
     status.innerHTML = 'No connection.';
-    connectDiv.className ='';
-    welcomeDiv.className = '';
       //  serverURL.disabled='disabled'; // Delete this part if you want the URL input box enabled
 };
 
@@ -82,10 +82,9 @@ var setLoggedOffProperties = function() {
 var setLoggedOnProperties = function() {
     status.innerHTML = 'Your know as: ' + MsgControl.user + ' ';
     status.appendChild(disconnect);
-    disconnect.className ='';
-    welcomeDiv.className = 'hidden';
-    connectDiv.className ='hidden';
-    messageDiv.className ='';
+    disconnect.className ='exitButton';
+    connectArticle.className ='hidden';
+    messageArticle.className ='mainPageContainer';
 };
 
 
@@ -99,7 +98,7 @@ var setLoggedOnProperties = function() {
      // other.replace(/ /g,'<br>');
     // other.split(/ /g).join('<br>');
     usersDiv.innerHTML = '';    // Clear the user list field.
-    userCounterDiv.innerHTML = 'Currently ' + userArray[0] + ' users online';
+    userCounterDiv.innerHTML = userArray[0] + ' online';
     for ( i = 1; i < userArray.length; i ++ ) {     // start with index 1. index 0 is usercount.
       userListItem = document.createElement('p');
       userListItem.innerHTML = userArray[i];

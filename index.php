@@ -4,16 +4,18 @@
     <meta charset=utf-8>
     <title>HTML5 websockets</title>
     <link rel="shortcut icon" href="img/drop.png">
-    <link rel="stylesheet" href="css/bootstrap.css" title="Bootstrap">
-    <link rel="stylesheet" href="css/style.css" title="Bootstrap">
+    <link rel='stylesheet' type='text/css' href='css/normalize.css'>
+    <link rel='stylesheet' type='text/css' href='css/boilerplate.css'>
+    <link rel='stylesheet' type='text/css' href='css/styledark.css'>
+
     <script src="js/modernizr.js"></script>
 </head>
 <body>
             <header>
                 <div id='status'>
                 	no connection
-                	<button id='disconnect'>
-                		Disconnect
+                	<button id='disconnect'  class='exitButton'>
+                		X
                 	</button>
                 </div>
                 <h2 id='topbar'>Ardeidae Messenger</h2>
@@ -25,7 +27,7 @@
 	            </nav>
 
     	<section>
-                            <article id='createConnection'>
+                            <article id='createConnection' class='mainPageContainer'>
                             	<div id='welcome'>
 <h3>Welcome to a node.js powered chat-client using websockets</h3>
 <p>This is a simple chat service using websockets. Please read the <a href="none">usage rules</a>
@@ -39,19 +41,17 @@ and then se the chat on your local area network, or connect to one of the public
                        	 </header>
 			    <div id='connectbox'>
 			        <form name="myform">
-
+			        	 <input id='url' class='textInputField' type="text" name="serverURL" value='ws://dbwebb.se:1337'>
+			        	 <input id='userName' class='textInputField' type="text" name="userName" placeholder="username"><br>
 			            <select id="dropDown" name="selectServer">
 			                <option value="ws://dbwebb.se:1337">Remote</option>
 			                <option value="ws://127.0.0.1:1337">Local</option>
 			                <option value="ws://192.168.1.36:1337">LAN</option>
 			            </select>
-			            <input id='url' type="text" name="serverURL" value='ws://dbwebb.se:1337'>
-			            <input id='userName' type="text" name="userName" placeholder="username"><br>
-			        	<input id='password' type="text" name="password" placeholder="password (if required)">
-
+			        	 <input id='password' class='textInputField' type="text" name="password" placeholder="password (if required)">
 			        </form>
 			        <div id='connectbuttonbox'>
-			            <button id='connect'>Connect</button>
+			            <button id='connect' class='smallButton'>Connect</button>
 			        </div>
 			    </div>
 			<footer>
@@ -59,7 +59,7 @@ and then se the chat on your local area network, or connect to one of the public
 			</footer>
 		</article>
 
-		<article id='createMessage'>
+		<article id='createMessage' class='mainPageContainer'>
 			<div id='posts'></div>
 			<header>
 				<h1>Write a message</h1>
@@ -67,10 +67,10 @@ and then se the chat on your local area network, or connect to one of the public
 			    <div id='messagebox'>
 			        <form name="message_field">
 			            <div id='inputbox'>
-			                <textarea id='message' autofocus></textarea>
+			                <textarea id='message' class='textInputField' autofocus></textarea>
 			            </div>
 			            <div id='buttonbox'>
-			                <button id='send'>Send</button>
+			                <button id='send' class='smallButton'>Send</button>
 			            </div>
 			        </form>
 			    </div>
@@ -81,14 +81,15 @@ and then se the chat on your local area network, or connect to one of the public
 	</section>
 
 	<aside>
-		<div id='userCounter'></div>
-		<div id='userlist'></div>
-		<div id='output'></div>
+		<div id='sidecolumn'>
+			<div id='userCounter'></div>
+			<div id='userlist'></div>
+			<div id='output'></div>
+		</div>
 	</aside>
 
 	<footer>
-		    <i>Content on this site is licensed under the
-		    Creative Commons Attribution Share-Alike License v3.0. &copy; 2015</i>
+		   Creative Commons Attribution-ShareAlike 4.0 International License.
 	</footer>
 
 <script src="js/jquery.min.js"></script>
