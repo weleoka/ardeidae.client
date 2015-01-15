@@ -47,16 +47,16 @@ function is_system_msg(userId, msg) {
   if ( lead === 'init' ) {
      console.log('SYS:init recieved... writing new Name to user on online list at index: ' + userId );
      UsrControl.setNameAtIndex(userName, userId);
-     // UsrControl.findNameByIndex(userId) = ;
+
      var broadcastMessage = userName + ' has entered the zone.';
      Broadcaster.broadcastServerRegularInfo( broadcastMessage );
      LogKeeper.saveRegularMessage('server', 'server', 'server', broadcastMessage);
-     // MessageLog.push( new Message( 'server', msg ) );
+
      var broadcastData = UsrControl.getStats();
      Broadcaster.broadcastServerSystemInfo( broadcastData );
      LogKeeper.saveSystemMessage('server', 'server', 'server', broadcastData);
-     // ServerMessageLog.push( new Message( 'server', msg ) );
-     UsrControl.printUserListArray();
+
+     // UsrControl.printUserListArray();  // Output curent users in console.
      return true;
   }
   if ( lead === 'exit' ) {
@@ -109,19 +109,19 @@ var LogKeeper = new LogKeeper();
  */
 function acceptConnectionAsBroadcast(request) {
   var connection = request.accept('broadcast-protocol', request.origin);
-  connection.broadcastId = UsrControl.getArrayLength();   // Give current connection an ID based on number of online users.
-  Broadcaster.addPeer(connection); // broadcastTo.push(connection);                   // Log the connection to broadcast array.
+  // Give current connection an ID based on number of online users.
+  connection.broadcastId = UsrControl.getArrayLength();
+  // Log the connection to broadcast array.
+  Broadcaster.addPeer(connection);
   console.log((new Date()) + ' Broadcast connection accepted from ' + request.origin + ' id = ' + connection.broadcastId);
   UsrControl.addNewUser( connection.broadcastId, request.origin );
-  // Broadcaster.broadcastServerSystemInfo( UsrControl.getStats() );
+
   // Send the new user the latest posts.
   connection.sendUTF( '---> Welcome to the Ardeidae server. (displaying latest 7 messages)' );
-  var log = LogKeeper.getMessages(),
+  var log = LogKeeper.retrieveRegularMessage(7),
         j;
-  for ( j = log.length - 7; j < log.length; j++ ) {
-    if ( log[j] ) {
-      connection.sendUTF( log[j].message );
-    }
+  for ( j = 0; j < log.length; j++ ) {
+      connection.sendUTF( log[j] );
   }
 
 /*
@@ -152,7 +152,7 @@ function acceptConnectionAsBroadcast(request) {
   connection.on('close', function(reasonCode, description) {
     var feedback = UsrControl.findNameByIndex(connection.broadcastId) + ' has left the zone.';
     UsrControl.removeByIndex (connection.broadcastId);
-    Broadcaster.removePeer(connection.broadcastId);  // set the connection to null... Array length shows server popularity.
+    Broadcaster.removePeer(connection.broadcastId);
     Broadcaster.broadcastServerRegularInfo( feedback );
     Broadcaster.broadcastServerSystemInfo( UsrControl.getStats() );
     console.log((new Date())
@@ -172,8 +172,10 @@ function acceptConnectionAsBroadcast(request) {
  */
 function acceptConnectionAsSystem(request) {
   var sysConnection = request.accept('system-protocol', request.origin);
-  sysConnection.broadcastId = UsrControl.getArrayLength() -1;      // Account for the initial user created on the formation of broadcast connection.
-  Broadcaster.addSystemPeer(sysConnection);            // Log the connection to server broadcasts array.
+  // Account for the initial user created on the formation of broadcast connection.
+  sysConnection.broadcastId = UsrControl.getArrayLength() -1;
+   // Log the connection to server broadcasts array.
+  Broadcaster.addSystemPeer(sysConnection);
   console.log((new Date()) + ' system connection accepted from ' + request.origin + ' id = ' + sysConnection.broadcastId);
 
   // Callback to handle each message from the client
@@ -190,7 +192,6 @@ function acceptConnectionAsSystem(request) {
                       + ' disconnected. Because: ' + reasonCode
                       + ' Description: ' + description);
     Broadcaster.removeSystemPeer(sysConnection.broadcastId);
-    // serverInfoBroadcastTo[sysConnection.broadcastId] = null;  // set the connection to null... Array length shows server popularity.
   });
   return true;
 }
@@ -222,8 +223,8 @@ wsServer.on('request', function(request) {
 
   // Unsupported protocol.
   if(!status) {
-    acceptConnectionAsSystem(request, null);
-    //console.log('Subprotocol not supported');
-    //request.reject(404, 'Subprotocol not supported');
+    // acceptConnectionAsSystem(request, null);
+    console.log('Subprotocol not supported');
+    request.reject(404, 'Subprotocol not supported');
   }
 });

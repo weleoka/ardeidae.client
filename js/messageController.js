@@ -1,56 +1,26 @@
-/*globals getHHMM, posts, populateUsersList, MsgControl, nl2br, websocket */
+/*globals getHHMM, posts, populateUsersList, MsgControl, nl2br, websocket, userDiv, userCounterDiv */
 
 
 /**
  *  Populate the users and user counter divs.
  */
  var populateUsersList = function(other) {
-    var userListItem, i;
+    var i;
     var userArray = other.split(',');
      // other.replace(/ /g,'<br>');
     // other.split(/ /g).join('<br>');
+    
     userDiv.innerHTML = '';    // Clear the user list field.
     userCounterDiv.innerHTML = userArray[0] + ' online';
 
     var myTable= '<table id="userTable">';
     myTable+= '<thead> <th>Name</th>              <th>Extension</th> </thead><tbody>';
     for ( i = 1; i < userArray.length; i ++ ) {     // start with index 1. index 0 is usercount.
-
-
-    myTable+= '<tr> <td>' + userArray[i] + '</td>      <td>' + i + '</td> </tr>';
-
-
-
-/*      userTableRow = document.createElement('tr');
-      userTableRow.innerHTML = userArray[i];
-      userTableRow.className = 'userTableItem';
-      userTable.appendChild(userListItem);
-
-*/
-
-/*  // Insert a row in the table at row index 0
-  var newRow   = userTable.insertRow(0);
-
-  // Insert a cell in the row at index 0
-  var newCell  = newRow.insertCell(0);
-
-  // Append a text node to the cell
-  var newText  = document.createTextNode('New top row');
-  newCell.appendChild(newText);
-
-// Call addRow() with the ID of a table
-addRow('userTable');
-*/
-      userListItem = document.createElement('p');
-      userListItem.innerHTML = userArray[i];
-      userListItem.className = 'userListItem';
-      userDiv.appendChild(userListItem);
+      myTable+= '<tr> <td>' + userArray[i] + '</td>      <td>' + i + '</td> </tr>';
     }
     myTable+= '</tbody></table>';
-    // $('userTable').append(myTable);
 
     userDiv.innerHTML = myTable;
-    // posts.scrollTop = newPost.offsetTop;
 };
 
 
@@ -101,6 +71,17 @@ MessageController.prototype = {
 
   msgSend: function(msg) {
     var formatedMessage = nl2br(msg);
-    websocket.send(this.user + ': ' + formatedMessage);
+
+    var messageObject = {
+      sender: this.user,
+      senderID: "",
+      message: formatedMessage,
+      recievers: ""
+    };
+
+  var portable = JSON.stringify(messageObject);
+  console.log(portable);
+
+    websocket.send(portable);
   },
 };

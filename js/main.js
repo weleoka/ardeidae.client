@@ -135,8 +135,19 @@ send.addEventListener('click', function(event) {
   event.preventDefault();
 });
 
+
 botButton.addEventListener('click', function(event) {
   createBot();
+
+  var values = {
+    name: "George",
+    message: "Batalinski",
+    recievers: "all"
+  };
+
+  var portable = JSON.stringify(values);
+  console.log(portable);
+
   event.preventDefault();
 });
 
@@ -175,3 +186,4 @@ setLoggedOffProperties();
 
 
 console.log('Everything is ready.');
+
