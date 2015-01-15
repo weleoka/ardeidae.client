@@ -71,12 +71,14 @@ MessageController.prototype = {
 
   msgSend: function(msg) {
     var formatedMessage = nl2br(msg);
-
+    var arr = [];
+    arr.push(2); 
+    arr.push(3);
     var messageObject = {
       sender: this.user,
       senderID: "",
       message: formatedMessage,
-      recievers: ""
+      reciever: arr
     };
 
   var portable = JSON.stringify(messageObject);

@@ -131,12 +131,23 @@ function acceptConnectionAsBroadcast(request) {
         var msg,
               peerID = connection.broadcastId,
               peerName = UsrControl.findNameByIndex(peerID),
-              peerOrigin = connection.remoteAddress;
+              peerOrigin = connection.remoteAddress,
+              processedMessage;
         if (message.type === 'utf8') {
-            msg = message.utf8Data;
-            LogKeeper.saveRegularMessage( peerID, peerName, peerOrigin,  msg );
-            Broadcaster.broadcastPeerRegularInfo( htmlEntities( msg ) );
-            console.log('Received regular utf8 message: (START)' + msg + '(END)');
+            msg = JSON.parse(message.utf8Data);
+            LogKeeper.saveRegularMessage( peerID, peerName, peerOrigin,  msg.message );
+            // Combine the server-logged name and the recieved message before broadcast.
+            processedMessage = htmlEntities( peerName + ': ' + msg.message );
+            if ( !msg.reciever ) {
+              Broadcaster.broadcastPeerRegularInfo( processedMessage );
+              console.log('Received regular utf8 message: (START)' + processedMessage + '(END)');
+            }
+            if ( msg.reciever ) {
+              var arr = msg.reciever;
+              // add the senders ID to reciever list.
+              arr.push(peerID);
+              Broadcaster.broadcastPeerPrivateInfo( processedMessage, arr );
+            }
         }
         else if (message.type === 'binary') {
             msg = message.binaryData;

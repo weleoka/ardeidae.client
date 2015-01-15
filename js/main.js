@@ -72,6 +72,11 @@ connect.addEventListener('click', function(event) {
     wsSystem = new WebSocket( url.value, 'system-protocol' );
     generateStatus('1');
 
+// Trying to print object...... look into it.
+  //  console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHh: ' + websocket);
+ //   var util = require('util');
+//    console.log(util.inspect(websocket, {showHidden: true, depth: null}));
+
 
 
 /**
