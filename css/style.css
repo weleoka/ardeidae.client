@@ -182,7 +182,6 @@ a:hover {
     overflow-x: none;
     margin-bottom: 1em;
 }
-
 #sidecolumn {
     background-color: #A1B556;
     display:block;
@@ -194,6 +193,7 @@ a:hover {
     -moz-border-radius: 3px;
     border-radius: 3px;
 }
+
 .mainPageContainer {
     height: 520px;
 }
@@ -299,6 +299,23 @@ a:hover {
     font-size: 10px;
     text-indent: 2em;
 }
+
+
+
+#userTable thead {
+    width: 100%;
+
+}
+#userTable td {
+    padding: 5px 5px 5px 0;
+    vertical-align: top;
+}
+#userTable thead th {
+    padding-right: 10px;
+    text-align: left;
+}
+
+
 #output {
     border-top: 1px dotted #B0BF74;
     margin-top: 0em;

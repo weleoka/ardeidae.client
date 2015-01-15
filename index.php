@@ -24,6 +24,7 @@
 
 	            <nav>
 			<img id="logo" src="img/bird.jpg">
+            <button id='botButton'>BOT</button>
 	            </nav>
 
     	<section>
@@ -82,18 +83,29 @@ and then se the chat on your local area network, or connect to one of the public
 
 	<aside>
 		<div id='sidecolumn'>
-			<div id='userCounter'></div>
-			<div id='userlist'></div>
+                                  <div id='userCounter'></div>
+            		<div id='userlist'>
+
+			</div>
 			<div id='output'></div>
 		</div>
 	</aside>
 
 	<footer>
 		   Creative Commons Attribution-ShareAlike 4.0 International License.
+
 	</footer>
 
 <script src="js/jquery.min.js"></script>
+
+<script src="js/ardeidaeFunctions.js"></script>
+
+<script src="js/messageController.js"></script>
+<script src="js/viewFeedback.js"></script>
 <script src="js/main.js"></script>
+
+
+<script src="js/userSimul.js"></script>
 
 </body>
 </html>
