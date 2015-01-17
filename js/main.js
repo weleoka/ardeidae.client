@@ -87,16 +87,17 @@ connect.addEventListener('click', function(event) {
     generateStatus('2');
   };
 
-  // message recieved
   websocket.onmessage = function(event) {
     console.log('Receiving message: ' + event.data + ' From: ' + event.origin);
-    if ( !MsgControl.is_own_msg(event.data) ) {
+    var msg = JSON.parse(event.data);
+    // prevent own message being counted as recieved message.
+    if ( !MsgControl.is_own_msg(msg) ) {
       generateStatus('4');
     }
-    MsgControl.addToOutput(event.data);   // publish the message in client.
+    // publish the message in client.
+    MsgControl.addToOutput(msg);
   };
 
-  // Eventhandler when the websocket is closed.
   websocket.onclose = function() {
     console.log('The websocket is now closed.');
     generateStatus('5');
@@ -109,11 +110,11 @@ connect.addEventListener('click', function(event) {
  */
   wsSystem.onopen = function() {
     console.log('The  wsSystem is now open.');
-    wsSystem.send('init ' + MsgControl.user);  // Give name to server.
+    wsSystem.send( MsgControl.newSystemInitMsg() );  // Give name to server.
   };
   wsSystem.onmessage = function(event) {
     console.log('Receiving system message: ' + event.data + ' From: ' + event.origin);
-    if (!MsgControl.is_system_msg(event.data)) {
+    if ( !MsgControl.is_system_msg(event.data) ) {
         console.log('error in system message');
     }
   };
@@ -134,27 +135,23 @@ send.addEventListener('click', function(event) {
     generateStatus('6');
   } else {
     console.log("Sending message: " + content.value);
-    MsgControl.msgSend(content.value);
+    websocket.send( MsgControl.newMsg(content.value) );
     generateStatus('3');
   }
   event.preventDefault();
 });
 
 
+
+/**
+ * Add eventhandler to BOT button
+ */
 botButton.addEventListener('click', function(event) {
   createBot();
-
-  var values = {
-    name: "George",
-    message: "Batalinski",
-    recievers: "all"
-  };
-
-  var portable = JSON.stringify(values);
-  console.log(portable);
-
   event.preventDefault();
 });
+
+
 
 /**
  * Add eventhandler to disconnect button

@@ -4,19 +4,16 @@
 /**
  *  Populate the users and user counter divs.
  */
- var populateUsersList = function(other) {
+ var populateUsersList = function(users) {
     var i;
-    var userArray = other.split(',');
-     // other.replace(/ /g,'<br>');
-    // other.split(/ /g).join('<br>');
-    
     userDiv.innerHTML = '';    // Clear the user list field.
-    userCounterDiv.innerHTML = userArray[0] + ' online';
 
     var myTable= '<table id="userTable">';
     myTable+= '<thead> <th>Name</th>              <th>Extension</th> </thead><tbody>';
-    for ( i = 1; i < userArray.length; i ++ ) {     // start with index 1. index 0 is usercount.
-      myTable+= '<tr> <td>' + userArray[i] + '</td>      <td>' + i + '</td> </tr>';
+    for ( i = 0; i < users.length; i ++ ) {
+      if (users[i]) {
+        myTable+= '<tr id=' + users[i].id + '> <td>' + users[i].name + '</td>      <td>' + i + '</td> </tr>';
+      }
     }
     myTable+= '</tbody></table>';
 
@@ -39,18 +36,18 @@ MessageController.prototype = {
       if (this.msgCount % 2 !== 0) {
           newPost.className = 'odd';
       }
-      newPost.innerHTML = getHHMM() + ' ' + msg;
+      newPost.innerHTML = getHHMM() + ' ' + msg.message;
       posts.appendChild(newPost);
       posts.scrollTop = newPost.offsetTop;
   },
 
   is_system_msg: function(msg) {
-    var lead = msg.substring(0, 4),
-          other = msg.substring(5, msg.length);
-          // console.log('LEADvar: ' + lead);
-          // console.log('OTHERvar: ' + other);
+    msg = JSON.parse(msg);
+    var lead = msg.lead;
+
     if ( lead === 'stat' ) {
-      populateUsersList(other);
+      userCounterDiv.innerHTML = msg.activeUsers + ' online';
+      populateUsersList( msg.info );
       console.log('Stats recieved');   // index 0 is usercount.
       return true;
     }
@@ -58,32 +55,33 @@ MessageController.prototype = {
   },
 
   is_own_msg: function(msg) {
-    var name = null;
-    name = msg.split(':', 1);
-    if ( name ) {
-      console.log('FOUND A NAME in message content: ' + name);
-      if ( name == MsgControl.user ) {
+      if ( msg.name == MsgControl.user ) {
         return true;
       }
-    }
     return false;
   },
 
-  msgSend: function(msg) {
+// EXPERIMENTING HERE
+  newMsg: function(msg) {
     var formatedMessage = nl2br(msg);
-    var arr = [];
-    arr.push(2); 
-    arr.push(3);
+    var arr = [2, 3];
     var messageObject = {
       sender: this.user,
       senderID: "",
       message: formatedMessage,
-      reciever: arr
+      reciever: arr,
+      attributes: "private"
     };
-
-  var portable = JSON.stringify(messageObject);
-  console.log(portable);
-
-    websocket.send(portable);
+    var portable = JSON.stringify(messageObject);
+    return portable;
   },
+
+  newSystemInitMsg: function() {
+    var values = {
+      lead: "init",
+      name: this.user,
+    };
+    var portable = JSON.stringify(values);
+    return portable;
+  }
 };

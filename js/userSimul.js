@@ -21,6 +21,16 @@ var createBot = function () {
 
     botCounter++;
 
+// Give server the botName
+var newBotSystemInit = function() {
+    var values = {
+      lead: "init",
+      name: botName,
+    };
+    var portable = JSON.stringify(values);
+    return portable;
+  };
+
 
  /**
  * Websocket broadcast handlers.
@@ -46,7 +56,7 @@ var createBot = function () {
  */
   botWsSystem.onopen = function() {
     console.log('The botWsSystem is now open.');
-    botWsSystem.send('init ' + botName);  // Give name to server.
+    botWsSystem.send( newBotSystemInit() );  // Give name to server.
   };
   botWsSystem.onmessage = function(event) {
     console.log('Receiving system message: ' + event.data + ' From: ' + event.origin);

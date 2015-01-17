@@ -39,35 +39,34 @@ function htmlEntities(str) {
  * Check if it's a system message and handle it accordingly.
  */
 function is_system_msg(userId, msg) {
-  var lead = msg.substring(0, 4),
-        userName = msg.substring(5, msg.length);
-   // console.log('LEADvar: ' + lead);
-   // console.log('USERvar: ' + userName);
-   // console.log('Length of users array = ' + UserList.length);
-  if ( lead === 'init' ) {
-     console.log('SYS:init recieved... writing new Name to user on online list at index: ' + userId );
-     UsrControl.setNameAtIndex(userName, userId);
+  msg = JSON.parse(msg);
 
-     var broadcastMessage = userName + ' has entered the zone.';
+  if ( msg.lead === 'init' ) {
+     console.log('SYS:init recieved...');
+     UsrControl.setNameAtIndex(msg.name, userId);
+
+     var broadcastMessage = msg.name + ' has entered the zone.';
      Broadcaster.broadcastServerRegularInfo( broadcastMessage );
+     // Save to log <-- Think about JSON parsing
      LogKeeper.saveRegularMessage('server', 'server', 'server', broadcastMessage);
 
      var broadcastData = UsrControl.getStats();
      Broadcaster.broadcastServerSystemInfo( broadcastData );
+     // Save to log <-- Think about JSON parsing
      LogKeeper.saveSystemMessage('server', 'server', 'server', broadcastData);
 
      // UsrControl.printUserListArray();  // Output curent users in console.
      return true;
   }
-  if ( lead === 'exit' ) {
+  if ( msg.lead === 'exit' ) {
     return true;
   }
-  if ( lead === 'stat' ) {
+  if ( msg.lead === 'stat' ) {
     console.log('SYS:stat recieved.');
     Broadcaster.broadcastServerSystemInfo( UsrControl.getStats() );
     return true;
   }
-  if ( lead === 'hist' ) {
+  if ( msg.lead === 'hist' ) {
     console.log('SYS.hist recieved.');
     Broadcaster.broadcastServerSystemInfo( UsrControl.getHistory() );
     return true;
@@ -135,18 +134,21 @@ function acceptConnectionAsBroadcast(request) {
               processedMessage;
         if (message.type === 'utf8') {
             msg = JSON.parse(message.utf8Data);
+            
             LogKeeper.saveRegularMessage( peerID, peerName, peerOrigin,  msg.message );
-            // Combine the server-logged name and the recieved message before broadcast.
-            processedMessage = htmlEntities( peerName + ': ' + msg.message );
+
             if ( !msg.reciever ) {
-              Broadcaster.broadcastPeerRegularInfo( processedMessage );
-              console.log('Received regular utf8 message: (START)' + processedMessage + '(END)');
+              publicMsg = MsgControl.prepareEcho( peerName, msg.message );
+              Broadcaster.broadcastPeerRegularInfo( publicMsg );
+              // console.log('Received regular utf8 message: (START)' + processedMessage + '(END)');
             }
+            // Private messaging handler
             if ( msg.reciever ) {
               var arr = msg.reciever;
+              privateMsg = MsgControl.preparePrivateEcho( peerName, msg.message );
               // add the senders ID to reciever list.
               arr.push(peerID);
-              Broadcaster.broadcastPeerPrivateInfo( processedMessage, arr );
+              Broadcaster.broadcastPeerPrivateInfo( privateMsg, arr );
             }
         }
         else if (message.type === 'binary') {
@@ -166,11 +168,6 @@ function acceptConnectionAsBroadcast(request) {
     Broadcaster.removePeer(connection.broadcastId);
     Broadcaster.broadcastServerRegularInfo( feedback );
     Broadcaster.broadcastServerSystemInfo( UsrControl.getStats() );
-    console.log((new Date())
-                      + ' Peer ' + connection.remoteAddress
-                      + ' Broadcastid = ' + connection.broadcastId
-                      + ' disconnected. Because: ' + reasonCode
-                      + ' Description: ' + description);
   });
   return true;
 }
