@@ -4,10 +4,7 @@ var port = 1337;
 // Require the modules we need
 var http = require('http');
 var WebSocketServer = require('websocket').server;
-/*    var WebSocketClient = require('websocket').client;
-    var WebSocketFrame  = require('websocket').frame;
-    var WebSocketRouter = require('websocket').router;
-*/
+
 var UsrControl = require('ardeidae').usrControl;
 var MsgControl = require('ardeidae').msgControl;
 var Broadcaster = require('ardeidae').broadcaster;
@@ -25,37 +22,14 @@ var LogKeeper = require('ardeidae').logKeeper;
 }
 
 
-/**
- * Avoid injections
- *
- */
-function htmlEntities(str) {
-  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
-
 
 /**
  * Check if it's a system message and handle it accordingly.
  */
 function is_system_msg(userId, msg) {
-  msg = JSON.parse(msg);
-
   if ( msg.lead === 'init' ) {
      console.log('SYS:init recieved...');
      UsrControl.setNameAtIndex(msg.name, userId);
-
-     var broadcastMessage = msg.name + ' has entered the zone.';
-     Broadcaster.broadcastServerRegularInfo( broadcastMessage );
-     // Save to log <-- Think about JSON parsing
-     LogKeeper.saveRegularMessage('server', 'server', 'server', broadcastMessage);
-
-     var broadcastData = UsrControl.getStats();
-     Broadcaster.broadcastServerSystemInfo( broadcastData );
-     // Save to log <-- Think about JSON parsing
-     LogKeeper.saveSystemMessage('server', 'server', 'server', broadcastData);
-
-     // UsrControl.printUserListArray();  // Output curent users in console.
      return true;
   }
   if ( msg.lead === 'exit' ) {
@@ -63,12 +37,16 @@ function is_system_msg(userId, msg) {
   }
   if ( msg.lead === 'stat' ) {
     console.log('SYS:stat recieved.');
-    Broadcaster.broadcastServerSystemInfo( UsrControl.getStats() );
+    Broadcaster.broadcastServerSystemInfo(
+            UsrControl.getStats()
+    );
     return true;
   }
   if ( msg.lead === 'hist' ) {
     console.log('SYS.hist recieved.');
-    Broadcaster.broadcastServerSystemInfo( UsrControl.getHistory() );
+    Broadcaster.broadcastServerSystemInfo(
+            UsrControl.getHistory()
+    );
     return true;
   }
  }
@@ -96,7 +74,7 @@ var wsServer = new WebSocketServer({  httpServer: httpServer,  autoAcceptConnect
 
 // Start up all things Ardeidae.
 var UsrControl = new UsrControl();
-var UsgControl = new MsgControl();
+var MsgControl = new MsgControl();
 var Broadcaster = new Broadcaster();
 var LogKeeper = new LogKeeper();
 
@@ -108,20 +86,27 @@ var LogKeeper = new LogKeeper();
  */
 function acceptConnectionAsBroadcast(request) {
   var connection = request.accept('broadcast-protocol', request.origin);
-  // Give current connection an ID based on number of online users.
+  // Get history from log before adding the new peer.
+  var log = LogKeeper.retrieveRegularMessage(7);
+  // Give current connection an ID based on length of user array.
   connection.broadcastId = UsrControl.getArrayLength();
   // Log the connection to broadcast array.
   Broadcaster.addPeer(connection);
   console.log((new Date()) + ' Broadcast connection accepted from ' + request.origin + ' id = ' + connection.broadcastId);
   UsrControl.addNewUser( connection.broadcastId, request.origin );
 
-  // Send the new user the latest posts.
-  connection.sendUTF( '---> Welcome to the Ardeidae server. (displaying latest 7 messages)' );
-  var log = LogKeeper.retrieveRegularMessage(7),
-        j;
+  // Welcome and send the new user the latest posts.
+  connection.sendUTF(
+          MsgControl.prepareServerWelcomeMsg('---> Welcome to the Ardeidae server.')
+  );
+  var j;
   for ( j = 0; j < log.length; j++ ) {
-      connection.sendUTF( log[j] );
+      connection.sendUTF(
+              JSON.stringify( log[j] )
+      );
   }
+
+
 
 /*
  * Callback on message.
@@ -130,25 +115,28 @@ function acceptConnectionAsBroadcast(request) {
         var msg,
               peerID = connection.broadcastId,
               peerName = UsrControl.findNameByIndex(peerID),
-              peerOrigin = connection.remoteAddress,
-              processedMessage;
+              peerOrigin = connection.remoteAddress;
         if (message.type === 'utf8') {
             msg = JSON.parse(message.utf8Data);
-            
-            LogKeeper.saveRegularMessage( peerID, peerName, peerOrigin,  msg.message );
 
+            // Regular messaging handler
             if ( !msg.reciever ) {
-              publicMsg = MsgControl.prepareEcho( peerName, msg.message );
-              Broadcaster.broadcastPeerRegularInfo( publicMsg );
-              // console.log('Received regular utf8 message: (START)' + processedMessage + '(END)');
+              Broadcaster.broadcastPeerRegularInfo(
+                    MsgControl.prepareEcho(
+                            peerName, msg.message
+                    )
+              );
+              LogKeeper.saveRegularMessage( peerID, peerName, peerOrigin,  msg.message );
             }
+
             // Private messaging handler
             if ( msg.reciever ) {
-              var arr = msg.reciever;
-              privateMsg = MsgControl.preparePrivateEcho( peerName, msg.message );
-              // add the senders ID to reciever list.
-              arr.push(peerID);
-              Broadcaster.broadcastPeerPrivateInfo( privateMsg, arr );
+              var reciever = msg.reciever;
+              var privateMsg = MsgControl.preparePrivateEcho( peerName, msg.message );
+              // add the senders ID to reciever list to return correct echo.
+              reciever.push(peerID);
+              Broadcaster.broadcastPeerPrivateInfo( privateMsg, reciever );
+              LogKeeper.savePrivateMessage( peerID, peerName, peerOrigin,  msg.message, msg.reciever );
             }
         }
         else if (message.type === 'binary') {
@@ -160,14 +148,31 @@ function acceptConnectionAsBroadcast(request) {
   });
 
 /*
- * Callback when connection closes.
+ * Callback when connection closes. // reasonCode, description
  */
-  connection.on('close', function(reasonCode, description) {
-    var feedback = UsrControl.findNameByIndex(connection.broadcastId) + ' has left the zone.';
-    UsrControl.removeByIndex (connection.broadcastId);
+  connection.on('close', function() {
     Broadcaster.removePeer(connection.broadcastId);
-    Broadcaster.broadcastServerRegularInfo( feedback );
-    Broadcaster.broadcastServerSystemInfo( UsrControl.getStats() );
+
+      // Get userName, prepare departure info message, then broadcast.
+    Broadcaster.broadcastServerRegularInfo(
+            MsgControl.prepareServerInfoMsg(
+                  UsrControl.findNameByIndex(
+                          connection.broadcastId
+                   )
+                  + ' has left the zone.'
+            )
+    );
+
+    UsrControl.removeByIndex (connection.broadcastId);
+
+     // Get userList and userCount and prepare stats message, then broadcast.
+    var userList = UsrControl.getStats();
+    var userCount = UsrControl.getUserCount();
+    Broadcaster.broadcastServerSystemInfo(
+            MsgControl.prepareStatsReport(
+                    userList, userCount
+            )
+    );
   });
   return true;
 }
@@ -188,8 +193,28 @@ function acceptConnectionAsSystem(request) {
 
   // Callback to handle each message from the client
   sysConnection.on('message', function(message) {
-      console.log('Recieved system message: ' + message.utf8Data + '... passing to handler.');
-      is_system_msg( sysConnection.broadcastId, message.utf8Data );
+     console.log('Recieved system message: ' + message.utf8Data + '... passing to handler.');
+     var msg = JSON.parse(message.utf8Data);
+     if ( is_system_msg( sysConnection.broadcastId, msg ) ) {
+        // Get name from message, prepare info message and broadcast.
+       var contents = msg.name + ' has entered the zone.';
+       Broadcaster.broadcastServerRegularInfo (
+               MsgControl.prepareServerInfoMsg (
+                       contents
+               )
+       );
+       // Save to log <-- Think about JSON parsing
+       // LogKeeper.saveRegularMessage('server', 'server', 'server', contents);
+
+        // Get userList and userCount and prepare stats message, then transmit.
+       var userList = UsrControl.getStats();
+       var userCount = UsrControl.getUserCount();
+       Broadcaster.broadcastServerSystemInfo (
+                MsgControl.prepareStatsReport (
+                        userList, userCount
+                )
+       );
+     }
   });
 
   // Callback when client closes the connection

@@ -88,14 +88,26 @@ connect.addEventListener('click', function(event) {
   };
 
   websocket.onmessage = function(event) {
-    console.log('Receiving message: ' + event.data + ' From: ' + event.origin);
     var msg = JSON.parse(event.data);
-    // prevent own message being counted as recieved message.
-    if ( !MsgControl.is_own_msg(msg) ) {
-      generateStatus('4');
+    console.log(msg);
+    var isOwn = MsgControl.is_own_msg(msg);
+    if ( !msg.time ) {
+      // prevent own message being counted as recieved message.
+      if ( !isOwn ) {
+        console.log('Receiving message: ' + event.data + ' From: ' + event.origin);
+        generateStatus('4');
+        // publish the message in client.
+        MsgControl.addToOutput(msg);
+      }
+      if ( isOwn ) {
+        MsgControl.addToOutput(msg);
+      }
     }
-    // publish the message in client.
-    MsgControl.addToOutput(msg);
+    if ( msg.time ) {
+        console.log('FOUND TIMESTAMP: ' + msg.time);
+        // publish the history message in client.
+        MsgControl.addHistoryToOutput(msg);
+    }
   };
 
   websocket.onclose = function() {
