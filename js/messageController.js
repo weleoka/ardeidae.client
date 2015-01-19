@@ -6,7 +6,7 @@
  */
  var populateUsersList = function(users) {
     var i;
-    userDiv.innerHTML = '';    // Clear the user list field.
+        // Clear the user list field.
 
     var myTable= '<table id="userTable">';
     myTable+= '<thead> <th>Name</th><th>ID</th><th><input type="checkbox" id="selectall"/></th> </thead><tbody>';
@@ -21,7 +21,7 @@
     }
     myTable+= '</tbody></table>';
 
-    userDiv.innerHTML = myTable;
+    $('#userList').html(myTable);
 };
 
 
@@ -49,23 +49,25 @@ var convertUtcToLocalHHMM = function(timestamp) {
  * Handling of messages from server.
  */
 function MessageController() {
+  this.posts = $('#posts');
   this.user = null;
   this.msgCount = null;
 }
 MessageController.prototype = {
+
   addToOutput: function(msg) {
     this.msgCount++;
       var newPost = document.createElement('div');
       if (this.msgCount % 2 !== 0) {
           newPost.className = 'odd';
       }
-      newPost.innerHTML = getHHMM() + ' ' + msg.name + ': ' + msg.message;
+      newPost.innerHTML = getHHMM() + ' ' + msg.name + ': ' + nl2br(msg.message);
       if ( !msg.name ) {
-        newPost.innerHTML = msg.message;
+        newPost.innerHTML = nl2br(msg.message);
       }
 
-      posts.appendChild(newPost);
-      posts.scrollTop = newPost.offsetTop;
+      this.posts.append(newPost);
+      this.posts.scrollTop = newPost.offsetTop;
   },
 
   addHistoryToOutput: function(msg) {
@@ -75,14 +77,13 @@ MessageController.prototype = {
           newPost.className = 'odd';
       }
       newPost.innerHTML = convertUtcToLocalHHMM(msg.time) + ' ' + msg.name + ': ' + msg.message;
-      posts.appendChild(newPost);
-      posts.scrollTop = newPost.offsetTop;
+      this.posts.append(newPost);
+      this.posts.scrollTop = newPost.offsetTop;
   },
 
   is_system_msg: function(msg) {
-
     if ( msg.lead === 'stat' ) {
-      userCounterDiv.innerHTML = msg.activeUsers + ' online';
+      $('#userCounter').html( msg.activeUsers + ' online' );
       populateUsersList( msg.info );
       console.log('Stats recieved');   // index 0 is usercount.
       return true;
@@ -91,15 +92,14 @@ MessageController.prototype = {
   },
 
   is_own_msg: function(msg) {
-      if ( msg.name == MsgControl.user ) {
+      if ( msg.name == this.user ) {
         return true;
       }
     return false;
   },
 
-  // EXPERIMENTING HERE
   newMsg: function(msg) {
-    var formatedMessage = nl2br(msg);
+    var formatedMessage = msg;
     // userName is added by server to prevent client in-session namechanging.
     var messageObject = {
       sender: this.user,

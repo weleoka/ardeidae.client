@@ -12,12 +12,9 @@
 </head>
 <body>
             <header>
-                <div id='status'>
-                	no connection
-                	<button id='disconnect'  class='exitButton'>
-                		X
-                	</button>
-                </div>
+                <button id='disconnect'  class='exitButton'>X</button>
+                <div id='status'>no connection</div>
+                
                 <h2 id='topbar'>Ardeidae Messenger</h2>
                 <h4>First seen 2015!</h4>
             </header>
@@ -30,7 +27,7 @@
     	<section>
                             <article id='createConnection' class='mainPageContainer'>
                             	<div id='welcome'>
-<h3>Welcome to a node.js powered chat-client using websockets</h3>
+<h3>Welcome Ardeidae, a chat-client using websockets</h3>
 <p>This is a simple chat service using websockets. Please read the <a href="none">usage rules</a>
 and then login and get chatting to others!</p>
 <p>There are some different servers to choose from. You can use the included server if you run it with "nodejs"
@@ -41,13 +38,13 @@ and then se the chat on your local area network, or connect to one of the public
                                 		<h1>HTML5 websockets</h1>
                        	 </header>
 			    <div id='connectbox'>
-			        <form name="myform">
-			        	 <input id='url' class='textInputField' type="text" name="serverURL" value='ws://dbwebb.se:1337'>
-			        	 <input id='userName' class='textInputField' type="text" name="userName" placeholder="username"><br>
-			            <select id="dropDown" name="selectServer">
+			        <form>
+			        	 <input id='serverUrl' class='textInputField' type="text" value='ws://dbwebb.se:1337'>
+			        	 <input id='userName' class='textInputField' type="text" placeholder="username"><br>
+			            <select id="dropDown">
 			                <option value="ws://dbwebb.se:1337">Remote</option>
-			                <option value="ws://127.0.0.1:1337">Local</option>
-			                <option value="ws://192.168.1.36:1337">LAN</option>
+			                <option value="ws://127.0.0.1:8120">Local</option>
+			                <option value="ws://192.168.1.36:8120">LAN</option>
 			                <option value="ws://nodejs2.student.bth.se:8120">ONLINE</option>
 			            </select>
 			        	 <input id='password' class='textInputField' type="text" name="password" placeholder="password (if required)">
@@ -84,10 +81,8 @@ and then se the chat on your local area network, or connect to one of the public
 
 	<aside>
 		<div id='sidecolumn'>
-                                  <div id='userCounter'></div>
-            		<div id='userlist'>
-
-			</div>
+                                  <div id='userCounter'>...</div>
+            		<div id='userList'>Login to chat.</div>
 			<div id='output'></div>
 		</div>
 	</aside>

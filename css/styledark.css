@@ -244,9 +244,7 @@ a:hover {
  * AUTHORS CUSTOM ELEMENTS
  *
  */
-#status {
-    float: right;
-}
+
 #topbar {
     margin-left: 7em;
 }
@@ -300,6 +298,7 @@ a:hover {
   border: 1px solid #444444;
 }
 .exitButton {
+  float: right;
   width: 32px;
   height: 32px;
   margin-left: 2em;
@@ -310,7 +309,16 @@ a:hover {
   border-radius: 5px;
   border: 1px solid #444444;
 }
+#status {
+    float: right;
+}
 
+.userListItem {
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+}
 
 #connectbox {
     height: 90px;
@@ -370,7 +378,7 @@ a:hover {
     text-indent: 0.5em;
     font-weight: bold;
 }
-#userlist {
+#userList {
     width: 100%;
     height: 310px;
     overflow: auto;

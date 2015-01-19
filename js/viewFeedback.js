@@ -2,29 +2,32 @@
 messageArticle:true, outputDiv, posts, userCounterDiv:true, content, userDiv, url */
 
     // main page elements.
-    var connectArticle = document.getElementById('createConnection'),
-    messageArticle = document.getElementById('createMessage');
+    var connectArticle = $('#createConnection'),
+          messageArticle = $('#createMessage');
 
    // User information divs
-    var userCounterDiv = document.getElementById('userCounter'),
-    userDiv = document.getElementById('userlist'),
-    userTable = document.getElementById('userTable');
+    var userCounterDiv = $('#userCounter'),
+          userDiv = $('#userList'),
+          userTable = $('#userTable');
 
-    var outputDiv = document.getElementById('output');
+    
+
+    var status = $('#status'),
+          disconnect = $('#disconnect');
+
 
 /**
  * Set viewing properties for JS-enabled browser LOGGED OFF.
  */
 var setLoggedOffProperties = function() {
-    var status = document.getElementById('status');
-    disconnect.className = 'hidden';  // hide disconnect button
-    messageArticle.className ='hidden'; // hide message
-    connectArticle.className ='mainPageContainer';
-    content.value = '';                         // Clear message input field.
-    posts.innerHTML = '---> Welcome to the Websocket chat.';
-    userCounterDiv.innerHTML = '...';
-    userDiv.innerHTML = 'Login to chat.';
-    status.innerHTML = 'No connection.';
+    $('#disconnect').addClass('hidden');  // hide disconnect button
+    messageArticle.addClass('hidden'); // hide message
+    connectArticle.removeClass('hidden');
+    $('#message').prop('value', '');         // Clear message input field.
+    $('#posts').html ('');
+    $('#userCounter').html('...');
+    $('#userList').html('Login to chat.');
+    $('#status').html('No connection.');
       //  serverURL.disabled='disabled'; // Delete this part if you want the URL input box enabled
 };
 
@@ -32,14 +35,12 @@ var setLoggedOffProperties = function() {
 /**
  * Set viewing properties for JS-enabled browser LOGGED ON.
  */
-var setLoggedOnProperties = function() {
-      // user feedback and status modifications
-    var status = document.getElementById('status');
-    status.innerHTML = 'Your know as: ' + MsgControl.user + ' ';
-    status.appendChild(disconnect);
-    disconnect.className ='exitButton';
-    connectArticle.className ='hidden';
-    messageArticle.className ='mainPageContainer';
+var setLoggedOnProperties = function(user) {
+    var status = $('#status');
+    status.html('Your know as: ' + user + ' ');
+    disconnect.removeClass('hidden');
+    connectArticle.addClass('hidden');
+    messageArticle.removeClass('hidden');
 };
 
 
@@ -49,17 +50,19 @@ var setLoggedOnProperties = function() {
  * 1: connecting, 2: success, 3: send, 4: recieve, 5:disconnect, 6:error, 7:custom.
  */
 var generateStatus = function(type, custom) {
+  var url = $('#serverUrl').prop('value');
+  var user = $('userName').prop('value');
+  var outputDiv = $('#output');
   var output_user = document.createElement('p');
   switch (type) {
     case "1":
-      output_user.innerHTML = getHHMM() + ': Connecting to: ' + url.value + '...';
+      output_user.innerHTML = getHHMM() + ': Connecting to:\n' + url + '...';
       break;
     case "2":
-      setLoggedOnProperties();
+      setLoggedOnProperties(user);
       output_user.innerHTML = getHHMM() + ': Established websocket.';
       break;
     case "3":
-      content.value = '';       // blank out the message input field after sending message.
       output_user.innerHTML = getHHMM() + ': Sent message.';
       break;
     case "4":
@@ -67,7 +70,7 @@ var generateStatus = function(type, custom) {
       break;
     case "5":
       setLoggedOffProperties();
-      output_user.innerHTML = getHHMM() + ': Closed connection to:\n' + url.value;
+      output_user.innerHTML = getHHMM() + ': Closed connection to:\n' + url;
       break;
     case "6":
       output_user.innerHTML = getHHMM() + ': An error occured..';
@@ -78,7 +81,7 @@ var generateStatus = function(type, custom) {
     default:
       output_user.innerHTML = getHHMM() + ': feedback error.';
   }
-  outputDiv.appendChild(output_user);
+  outputDiv.append(output_user);
   outputDiv.scrollTop = output_user.offsetTop;
 };
 

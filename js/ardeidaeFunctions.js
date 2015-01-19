@@ -17,3 +17,5 @@ var nl2br = function (str) {
     return (str + ' ').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
 };
 
+
+// The server will store the linebreaks as a visible \n due to JSON not escaping without \\n.

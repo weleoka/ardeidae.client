@@ -2,7 +2,7 @@
 
 var botName,
       botID,
-      url2 = 'ws://127.0.0.1:1337',
+      url2 = 'ws://127.0.0.1:8120',
       botWebsocket,
       botWsSystem,
       botCounter = 0,

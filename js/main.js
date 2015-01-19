@@ -1,29 +1,13 @@
-/*globals window, WebSocket, MsgControl, createBot, generateStatus, MessageController, setLoggedOffProperties*/
+/*globals WebSocket, MsgControl, createBot, generateStatus, MessageController, setLoggedOffProperties*/
 
 /**
  * Place your JS-code here.
  */
+$(document).ready(function(){
+  'use strict';
 
-
-var url = document.getElementById('url'),                         // url input field
-
-    connect = document.getElementById('connect'),           // connect button
-    disconnect = document.getElementById('disconnect'),   // disconnect button
-    send = document.getElementById('send'),                     // send button
-
-    selectedServer = document.myform.selectServer,         // select dropdown list
-    serverURL = document.myform.serverURL,                   // return element for dropdown list
-    userName = document.myform.userName,                    // user name input
-
-    // Chat divs
-    posts = document.getElementById('posts'),                   // Posts in chat
-    content = document.getElementById('message'),           // message content
-
-    botButton = document.getElementById('botButton'),
-
-    websocket,
-    wsSystem;
-
+var websocket,
+      wsSystem;
 
 var MsgControl = new MessageController();
 
@@ -31,20 +15,22 @@ var MsgControl = new MessageController();
 /**
  * Add eventhandler to server select dropdown list and connection properties.
  */
-selectedServer.onchange = function() {
-  serverURL.value = selectedServer.value;
-};
+$('#dropDown').on('change', function() {
+  console.log('change');
+  $('#serverUrl').prop('value', $(this).prop('value'));
+});
 
 // Make sure the user connects when hitting enter on adress or username field.
-serverURL.addEventListener('keypress', function(event) {
+$('#serverUrl').on('keypress', function(event) {
     if (event.keyCode === 13) {
-      connect.click();
+      $('#connect').trigger('click');
       event.preventDefault();
     }
 });
-userName.addEventListener('keypress', function(event) {
+
+$('#userName').on('keypress', function(event) {
     if (event.keyCode === 13) {
-      connect.click();
+      $('#connect').trigger('click');
       event.preventDefault();
     }
 });
@@ -56,9 +42,10 @@ userName.addEventListener('keypress', function(event) {
  * Also contains websocket callback functions onopen, onmessage, onclose.
  */
 $('#connect').on('click', function (event) {
-    posts.innerHTML = '';
+    var url = $('#serverUrl').prop('value');
+    var userName = $('#userName').prop('value');
     // userDiv.innerHTML = '';
-    if (userName.value === '' || userName.value === null) {
+    if (userName === '' || userName === null) {
         generateStatus('7', 'A username is required.');
         return;
     }
@@ -66,10 +53,10 @@ $('#connect').on('click', function (event) {
       websocket.close();
       websocket = null;
     }
-    MsgControl.user = userName.value;
-    console.log( 'Connecting to: ' + url.value + ' With username: ' + MsgControl.user);
-    websocket = new WebSocket( url.value, 'broadcast-protocol' );
-    wsSystem = new WebSocket( url.value, 'system-protocol' );
+    MsgControl.user = userName;
+    console.log( 'Connecting to: ' + url + ' With username: ' + MsgControl.user);
+    websocket = new WebSocket( url, 'broadcast-protocol' );
+    wsSystem = new WebSocket( url, 'system-protocol' );
     generateStatus('1');
 
 
@@ -84,10 +71,10 @@ $('#connect').on('click', function (event) {
 
   websocket.onmessage = function(event) {
     var msg = JSON.parse(event.data);
-    // console.log(msg);
-    var isOwn = MsgControl.is_own_msg(msg);
+
     if ( !msg.time ) {
       // prevent own message being counted as recieved message.
+      var isOwn = MsgControl.is_own_msg(msg);
       if ( !isOwn ) {
         generateStatus('4');
         MsgControl.addToOutput(msg);
@@ -135,7 +122,9 @@ $('#connect').on('click', function (event) {
  * Add eventhandler to send button
  */
  $('#send').on('click', function (event) {
+  var content = $('#message').prop('value');
   var reciever = [];
+
   $('input.checkboxes').each( function() {
          if($(this).prop('checked')) {
                   reciever.push($(this).prop('id'));
@@ -148,14 +137,19 @@ $('#connect').on('click', function (event) {
   } else {
     console.log(reciever);
     if ( reciever.length === 0 ) {
-      console.log("Sending message: " + content.value);
-      websocket.send( MsgControl.newMsg(content.value) );
+      console.log("Sending message: " + content);
+      websocket.send(
+              MsgControl.newMsg( content )
+      );
       generateStatus('3');
     } else {
-      console.log("Sending private message: " + content.value);
-      websocket.send( MsgControl.newPrivateMsg(content.value, reciever) );
+      console.log("Sending private message: " + content);
+      websocket.send(
+              MsgControl.newPrivateMsg( content, reciever )
+      );
       generateStatus('3');
     }
+    $('#message').prop('value', '');       // blank out the message input field after sending message.
   }
   event.preventDefault();
 });
@@ -190,34 +184,28 @@ $('#botButton').on('click', function (event) {
 
 /**
  * Add eventhandler to message input field to trigger send button on enter,
- * or newine break if shift + enter.
+ * or newline break if shift + enter.
  */
-$('#content').on('keypress', function(event) {
+$('#message').on('keypress', function(event) {
     if (event.keyCode === 13 && !event.shiftKey) {
-      send.click();
+      $('#send').trigger('click');
       event.preventDefault();
-    }
-    if (event.keyCode === 13 && event.shiftKey) {   // Insert linebreak
-      console.log('content.value');
     }
 });
 
 
 
-
-
-
-    $('#selectall').click(function() {  //on click
-        if(this.checked) { // check select status
-            $('.checkboxes').each(function() { //loop through each checkbox
-                this.checked = true;  //select all checkboxes with class "checkbox1"
-            });
-        }else{
-            $('.checkboxes').each(function() { //loop through each checkbox
-                this.checked = false; //deselect all checkboxes with class "checkbox1"
-            });
-        }
-    });
+$('#selectall').on('click', function() {  //on click
+    if(this.checked) { // check select status
+        $('.checkboxes').each(function() { //loop through each checkbox
+            this.checked = true;  //select all checkboxes with class "checkbox1"
+        });
+    }else{
+        $('.checkboxes').each(function() { //loop through each checkbox
+            this.checked = false; //deselect all checkboxes with class "checkbox1"
+        });
+    }
+});
 
 
 
@@ -227,3 +215,4 @@ setLoggedOffProperties();
 
 console.log('Everything is ready.');
 
+});
