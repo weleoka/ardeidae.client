@@ -9,10 +9,14 @@
     userDiv.innerHTML = '';    // Clear the user list field.
 
     var myTable= '<table id="userTable">';
-    myTable+= '<thead> <th>Name</th>              <th>Extension</th> </thead><tbody>';
+    myTable+= '<thead> <th>Name</th><th>ID</th><th><input type="checkbox" id="selectall"/></th> </thead><tbody>';
     for ( i = 0; i < users.length; i ++ ) {
       if (users[i]) {
-        myTable+= '<tr id=' + users[i].id + '> <td>' + users[i].name + '</td>      <td>' + i + '</td> </tr>';
+        myTable+= '<tr id="' + users[i].id + '">';
+        myTable+= '<td>' + users[i].name + '</td>';
+        myTable+= '<td>' + i + '</td>';
+        myTable+= '<td><input id="' + users[i].id + '" class="checkboxes" type="checkbox" name="check[]"></td>';
+        myTable+= '</tr>';
       }
     }
     myTable+= '</tbody></table>';
@@ -35,11 +39,7 @@ var getHHMM = function() {
  * Convert UTC time to local HHMM.
  */
 var convertUtcToLocalHHMM = function(timestamp) {
-      // create a new javascript Date object based on the timestamp
-    // multiplied by 1000 so that the argument is in milliseconds, not seconds
-    // var utcDate = new Date(Date.UTC(96, 11, 1, 0, 0, 0));
     var utc = new Date(timestamp);
-
     var time = utc.toLocaleTimeString('en-US', { hour12: false });
     return time.substring(0, time.length-3);
 };
@@ -80,10 +80,8 @@ MessageController.prototype = {
   },
 
   is_system_msg: function(msg) {
-    msg = JSON.parse(msg);
-    var lead = msg.lead;
 
-    if ( lead === 'stat' ) {
+    if ( msg.lead === 'stat' ) {
       userCounterDiv.innerHTML = msg.activeUsers + ' online';
       populateUsersList( msg.info );
       console.log('Stats recieved');   // index 0 is usercount.
@@ -99,17 +97,29 @@ MessageController.prototype = {
     return false;
   },
 
-// EXPERIMENTING HERE
+  // EXPERIMENTING HERE
   newMsg: function(msg) {
     var formatedMessage = nl2br(msg);
-   //var arr = [2, 3];
     // userName is added by server to prevent client in-session namechanging.
     var messageObject = {
       sender: this.user,
       senderID: "",
       message: formatedMessage,
-      //reciever: arr,
-      //attributes: "private"
+    };
+    var portable = JSON.stringify(messageObject);
+    return portable;
+  },
+
+    // EXPERIMENTING HERE
+  newPrivateMsg: function(msg, reciever) {
+    var formatedMessage = nl2br(msg);
+    // userName is added by server to prevent client in-session namechanging.
+    var messageObject = {
+      sender: this.user,
+      senderID: "",
+      message: formatedMessage,
+      reciever: reciever,
+      attributes: "private"
     };
     var portable = JSON.stringify(messageObject);
     return portable;

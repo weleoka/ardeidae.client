@@ -55,9 +55,9 @@ userName.addEventListener('keypress', function(event) {
  * Event handler to create the websocket connection when someone clicks the button #connect
  * Also contains websocket callback functions onopen, onmessage, onclose.
  */
-connect.addEventListener('click', function(event) {
+$('#connect').on('click', function (event) {
     posts.innerHTML = '';
-    userDiv.innerHTML = '';
+    // userDiv.innerHTML = '';
     if (userName.value === '' || userName.value === null) {
         generateStatus('7', 'A username is required.');
         return;
@@ -72,11 +72,6 @@ connect.addEventListener('click', function(event) {
     wsSystem = new WebSocket( url.value, 'system-protocol' );
     generateStatus('1');
 
-// Trying to print object...... look into it.
-  //  console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHh: ' + websocket);
- //   var util = require('util');
-//    console.log(util.inspect(websocket, {showHidden: true, depth: null}));
-
 
 
 /**
@@ -89,14 +84,12 @@ connect.addEventListener('click', function(event) {
 
   websocket.onmessage = function(event) {
     var msg = JSON.parse(event.data);
-    console.log(msg);
+    // console.log(msg);
     var isOwn = MsgControl.is_own_msg(msg);
     if ( !msg.time ) {
       // prevent own message being counted as recieved message.
       if ( !isOwn ) {
-        console.log('Receiving message: ' + event.data + ' From: ' + event.origin);
         generateStatus('4');
-        // publish the message in client.
         MsgControl.addToOutput(msg);
       }
       if ( isOwn ) {
@@ -104,7 +97,6 @@ connect.addEventListener('click', function(event) {
       }
     }
     if ( msg.time ) {
-        console.log('FOUND TIMESTAMP: ' + msg.time);
         // publish the history message in client.
         MsgControl.addHistoryToOutput(msg);
     }
@@ -126,7 +118,8 @@ connect.addEventListener('click', function(event) {
   };
   wsSystem.onmessage = function(event) {
     console.log('Receiving system message: ' + event.data + ' From: ' + event.origin);
-    if ( !MsgControl.is_system_msg(event.data) ) {
+    var msg = JSON.parse(event.data);
+    if ( !MsgControl.is_system_msg(msg) ) {
         console.log('error in system message');
     }
   };
@@ -141,14 +134,28 @@ connect.addEventListener('click', function(event) {
 /**
  * Add eventhandler to send button
  */
-send.addEventListener('click', function(event) {
+ $('#send').on('click', function (event) {
+  var reciever = [];
+  $('input.checkboxes').each( function() {
+         if($(this).prop('checked')) {
+                  reciever.push($(this).prop('id'));
+         }
+  });
+
   if(!websocket || websocket.readyState === 3) {
     console.log('The websocket is not connected to a server.');
     generateStatus('6');
   } else {
-    console.log("Sending message: " + content.value);
-    websocket.send( MsgControl.newMsg(content.value) );
-    generateStatus('3');
+    console.log(reciever);
+    if ( reciever.length === 0 ) {
+      console.log("Sending message: " + content.value);
+      websocket.send( MsgControl.newMsg(content.value) );
+      generateStatus('3');
+    } else {
+      console.log("Sending private message: " + content.value);
+      websocket.send( MsgControl.newPrivateMsg(content.value, reciever) );
+      generateStatus('3');
+    }
   }
   event.preventDefault();
 });
@@ -158,7 +165,7 @@ send.addEventListener('click', function(event) {
 /**
  * Add eventhandler to BOT button
  */
-botButton.addEventListener('click', function(event) {
+$('#botButton').on('click', function (event) {
   createBot();
   event.preventDefault();
 });
@@ -168,7 +175,7 @@ botButton.addEventListener('click', function(event) {
 /**
  * Add eventhandler to disconnect button
  */
-disconnect.addEventListener('click', function(event) {
+ $('#disconnect').on('click', function (event) {
   if(!websocket || websocket.readyState === 3) {
     console.log('The websocket is not connected to a server.');
     generateStatus('6');
@@ -185,7 +192,7 @@ disconnect.addEventListener('click', function(event) {
  * Add eventhandler to message input field to trigger send button on enter,
  * or newine break if shift + enter.
  */
-content.addEventListener('keypress', function(event) {
+$('#content').on('keypress', function(event) {
     if (event.keyCode === 13 && !event.shiftKey) {
       send.click();
       event.preventDefault();
@@ -194,6 +201,25 @@ content.addEventListener('keypress', function(event) {
       console.log('content.value');
     }
 });
+
+
+
+
+
+
+    $('#selectall').click(function() {  //on click
+        if(this.checked) { // check select status
+            $('.checkboxes').each(function() { //loop through each checkbox
+                this.checked = true;  //select all checkboxes with class "checkbox1"
+            });
+        }else{
+            $('.checkboxes').each(function() { //loop through each checkbox
+                this.checked = false; //deselect all checkboxes with class "checkbox1"
+            });
+        }
+    });
+
+
 
 setLoggedOffProperties();
 

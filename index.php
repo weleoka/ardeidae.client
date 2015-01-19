@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="img/drop.png">
     <link rel='stylesheet' type='text/css' href='css/normalize.css'>
     <link rel='stylesheet' type='text/css' href='css/boilerplate.css'>
-    <link rel='stylesheet' type='text/css' href='css/styledark.css'>
+    <link rel='stylesheet' type='text/css' href='css/style.css'>
 
     <script src="js/modernizr.js"></script>
 </head>
@@ -48,6 +48,7 @@ and then se the chat on your local area network, or connect to one of the public
 			                <option value="ws://dbwebb.se:1337">Remote</option>
 			                <option value="ws://127.0.0.1:1337">Local</option>
 			                <option value="ws://192.168.1.36:1337">LAN</option>
+			                <option value="ws://nodejs2.student.bth.se:8120">ONLINE</option>
 			            </select>
 			        	 <input id='password' class='textInputField' type="text" name="password" placeholder="password (if required)">
 			        </form>
