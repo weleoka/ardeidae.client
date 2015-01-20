@@ -10,7 +10,7 @@ messageArticle:true, outputDiv, posts, userCounterDiv:true, content, userDiv, ur
           userDiv = $('#userList'),
           userTable = $('#userTable');
 
-    
+    var checkAll = $('#checkAll');
 
     var status = $('#status'),
           disconnect = $('#disconnect');
@@ -20,14 +20,15 @@ messageArticle:true, outputDiv, posts, userCounterDiv:true, content, userDiv, ur
  * Set viewing properties for JS-enabled browser LOGGED OFF.
  */
 var setLoggedOffProperties = function() {
-    $('#disconnect').addClass('hidden');  // hide disconnect button
-    messageArticle.addClass('hidden'); // hide message
+    $('#status').html('No connection.');
+    messageArticle.addClass('hidden');
     connectArticle.removeClass('hidden');
+    disconnect.addClass('hidden');  // hide disconnect button
     $('#message').prop('value', '');         // Clear message input field.
     $('#posts').html ('');
-    $('#userCounter').html('...');
-    $('#userList').html('Login to chat.');
-    $('#status').html('No connection.');
+    userCounterDiv.addClass('hidden');
+    userTable.addClass('hidden');
+    checkAll.prop('checked', false);
       //  serverURL.disabled='disabled'; // Delete this part if you want the URL input box enabled
 };
 
@@ -36,11 +37,15 @@ var setLoggedOffProperties = function() {
  * Set viewing properties for JS-enabled browser LOGGED ON.
  */
 var setLoggedOnProperties = function(user) {
-    var status = $('#status');
-    status.html('Your know as: ' + user + ' ');
+    $('#status').html('Your know as: ' + user + ' ');
+    messageArticle.removeClass('hidden');
+    userCounterDiv.removeClass('hidden');
+
     disconnect.removeClass('hidden');
     connectArticle.addClass('hidden');
-    messageArticle.removeClass('hidden');
+
+    userTable.removeClass('hidden');
+    checkAll.prop('checked', false);
 };
 
 
@@ -51,7 +56,7 @@ var setLoggedOnProperties = function(user) {
  */
 var generateStatus = function(type, custom) {
   var url = $('#serverUrl').prop('value');
-  var user = $('userName').prop('value');
+  var user = $('#userName').prop('value');
   var outputDiv = $('#output');
   var output_user = document.createElement('p');
   switch (type) {
@@ -82,7 +87,7 @@ var generateStatus = function(type, custom) {
       output_user.innerHTML = getHHMM() + ': feedback error.';
   }
   outputDiv.append(output_user);
-  outputDiv.scrollTop = output_user.offsetTop;
+  outputDiv.scrollTop(output_user.offsetTop);
 };
 
 

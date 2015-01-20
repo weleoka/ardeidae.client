@@ -201,6 +201,11 @@ a:hover {
 .odd {
     background-color: #E8D992;
 }
+.private {
+    color: #9B7990;
+}
+
+
 .smallButton {
   padding-left: 7px;
   padding-right: 7px;

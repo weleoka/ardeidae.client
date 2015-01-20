@@ -5,23 +5,28 @@
  *  Populate the users and user counter divs.
  */
  var populateUsersList = function(users) {
-    var i;
+    var i,
+          tableRow = '';
         // Clear the user list field.
 
-    var myTable= '<table id="userTable">';
-    myTable+= '<thead> <th>Name</th><th>ID</th><th><input type="checkbox" id="selectall"/></th> </thead><tbody>';
+//    var myTable= '<table id="userTable">';
+//    myTable+= '<thead> <th>Name</th><th>ID</th><th><input id="selectAll" type="checkbox"/></th> </thead><tbody>';
     for ( i = 0; i < users.length; i ++ ) {
       if (users[i]) {
-        myTable+= '<tr id="' + users[i].id + '">';
-        myTable+= '<td>' + users[i].name + '</td>';
-        myTable+= '<td>' + i + '</td>';
-        myTable+= '<td><input id="' + users[i].id + '" class="checkboxes" type="checkbox" name="check[]"></td>';
-        myTable+= '</tr>';
+        tableRow+= '<tr id="' + users[i].id + '">';
+        tableRow+= '<td>' + users[i].name + '</td>';
+        tableRow+= '<td>' + i + '</td>';
+        tableRow+= '<td><input id="' + users[i].id + '" class="checkboxes" type="checkbox"></td>';
+        tableRow+= '</tr>';
       }
     }
-    myTable+= '</tbody></table>';
-
-    $('#userList').html(myTable);
+//    myTable+= '</tbody></table>';
+    // $('#userTable > tbody:last');
+    console.log('TableRow: ' + tableRow);
+    var tBody = $('#userTable').find('tbody:last');
+    tBody.html('');
+    tBody.append(tableRow);
+    // $('#userTable tbody').html(tableRow);
 };
 
 
@@ -58,8 +63,14 @@ MessageController.prototype = {
   addToOutput: function(msg) {
     this.msgCount++;
       var newPost = document.createElement('div');
+
       if (this.msgCount % 2 !== 0) {
           newPost.className = 'odd';
+      }
+      if ( msg.attributes ) {
+        // var newPostClass = msg.attributes;
+        // element.className += " " + newClassName;
+        newPost.className += ' ' + msg.attributes;
       }
       newPost.innerHTML = getHHMM() + ' ' + msg.name + ': ' + nl2br(msg.message);
       if ( !msg.name ) {
@@ -67,7 +78,7 @@ MessageController.prototype = {
       }
 
       this.posts.append(newPost);
-      this.posts.scrollTop = newPost.offsetTop;
+      this.posts.scrollTop(newPost.offsetTop);
   },
 
   addHistoryToOutput: function(msg) {
@@ -78,7 +89,7 @@ MessageController.prototype = {
       }
       newPost.innerHTML = convertUtcToLocalHHMM(msg.time) + ' ' + msg.name + ': ' + msg.message;
       this.posts.append(newPost);
-      this.posts.scrollTop = newPost.offsetTop;
+      this.posts.scrollTop(newPost.offsetTop);
   },
 
   is_system_msg: function(msg) {

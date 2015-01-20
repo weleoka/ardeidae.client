@@ -44,7 +44,6 @@ $('#userName').on('keypress', function(event) {
 $('#connect').on('click', function (event) {
     var url = $('#serverUrl').prop('value');
     var userName = $('#userName').prop('value');
-    // userDiv.innerHTML = '';
     if (userName === '' || userName === null) {
         generateStatus('7', 'A username is required.');
         return;
@@ -71,21 +70,14 @@ $('#connect').on('click', function (event) {
 
   websocket.onmessage = function(event) {
     var msg = JSON.parse(event.data);
-
     if ( !msg.time ) {
-      // prevent own message being counted as recieved message.
-      var isOwn = MsgControl.is_own_msg(msg);
-      if ( !isOwn ) {
+      if ( !MsgControl.is_own_msg(msg) ) {    // prevent own message being counted as recieved message.
         generateStatus('4');
-        MsgControl.addToOutput(msg);
       }
-      if ( isOwn ) {
         MsgControl.addToOutput(msg);
-      }
     }
     if ( msg.time ) {
-        // publish the history message in client.
-        MsgControl.addHistoryToOutput(msg);
+        MsgControl.addHistoryToOutput(msg);   // publish the history message in client.
     }
   };
 
@@ -125,7 +117,7 @@ $('#connect').on('click', function (event) {
   var content = $('#message').prop('value');
   var reciever = [];
 
-  $('input.checkboxes').each( function() {
+  $('input.checkboxes').each( function() {  // check if message private and which recievers.
          if($(this).prop('checked')) {
                   reciever.push($(this).prop('id'));
          }
@@ -149,8 +141,10 @@ $('#connect').on('click', function (event) {
       );
       generateStatus('3');
     }
+
     $('#message').prop('value', '');       // blank out the message input field after sending message.
   }
+
   event.preventDefault();
 });
 
@@ -195,14 +189,14 @@ $('#message').on('keypress', function(event) {
 
 
 
-$('#selectall').on('click', function() {  //on click
-    if(this.checked) { // check select status
+$('#selectAll').on('click', function() {  //on click
+    if ($(this).prop('checked') ) { // check select status
         $('.checkboxes').each(function() { //loop through each checkbox
-            this.checked = true;  //select all checkboxes with class "checkbox1"
+            $(this).prop('checked', true);  //select all checkboxes with class "checkboxes"
         });
-    }else{
+    } else {
         $('.checkboxes').each(function() { //loop through each checkbox
-            this.checked = false; //deselect all checkboxes with class "checkbox1"
+            $(this).prop('checked', false); //deselect all checkboxes with class "checkboxes"
         });
     }
 });

@@ -14,7 +14,6 @@
             <header>
                 <button id='disconnect'  class='exitButton'>X</button>
                 <div id='status'>no connection</div>
-                
                 <h2 id='topbar'>Ardeidae Messenger</h2>
                 <h4>First seen 2015!</h4>
             </header>
@@ -81,8 +80,18 @@ and then se the chat on your local area network, or connect to one of the public
 
 	<aside>
 		<div id='sidecolumn'>
-                                  <div id='userCounter'>...</div>
-            		<div id='userList'>Login to chat.</div>
+                                  <div id='userCounter'></div>
+            		<div id='userList'>
+    				<table id="userTable">
+    					<thead>
+	    					<th>Name</th>
+	    					<th>ID</th>
+	    					<th><input id="selectAll" type="checkbox"/></th>
+    					</thead>
+    					<tbody>
+					</tbody>
+				</table>
+            		</div>
 			<div id='output'></div>
 		</div>
 	</aside>
