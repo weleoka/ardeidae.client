@@ -6,7 +6,8 @@
 $(document).ready(function(){
   'use strict';
 
-var websocket,
+var wsLogin,
+      websocket,
       wsSystem;
 
 var MsgControl = new MessageController();
@@ -44,6 +45,8 @@ $('#userName').on('keypress', function(event) {
 $('#connect').on('click', function (event) {
     var url = $('#serverUrl').prop('value');
     var userName = $('#userName').prop('value');
+    var password = $('#password').prop('value');
+    console.log('PASSWORD: ' + password);
     if (userName === '' || userName === null) {
         generateStatus('7', 'A username is required.');
         return;
@@ -54,10 +57,39 @@ $('#connect').on('click', function (event) {
     }
     MsgControl.user = userName;
     console.log( 'Connecting to: ' + url + ' With username: ' + MsgControl.user);
+    if ( password ) {
+      console.log('Starting login protocol');
+      wsLogin = new WebSocket( url, 'login-protocol' );
+    }
     websocket = new WebSocket( url, 'broadcast-protocol' );
     wsSystem = new WebSocket( url, 'system-protocol' );
     generateStatus('1');
 
+
+
+/**
+ * Websocket login handlers.
+ */
+ if ( wsLogin ) {
+  wsLogin.onopen = function() {
+    console.log('The  wsSystem is now open.');
+    if ( $('#password').prop('value') ) {
+      wsLogin.send(   // Give name and Password to server.
+              MsgControl.newSystemLoginMsg( $('#password').prop('value'))
+      );
+    }
+  };
+
+  wsLogin.onmessage = function(event) {
+    var msg = JSON.parse(event.data);
+    generateStatus('7', msg.message);
+  };
+
+  wsLogin.onclose = function() {
+    console.log('The websocket is now closed.');
+
+  };
+}
 
 
 /**
@@ -99,7 +131,10 @@ $('#connect').on('click', function (event) {
     console.log('Receiving system message: ' + event.data + ' From: ' + event.origin);
     var msg = JSON.parse(event.data);
     if ( !MsgControl.is_system_msg(msg) ) {
-        console.log('error in system message');
+        if ( msg.message ) {
+          console.log('Message from server: ' + msg.message);
+        }
+        console.log('error in message from server.');
     }
   };
   wsSystem.onclose = function() {

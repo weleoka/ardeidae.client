@@ -136,6 +136,17 @@ MessageController.prototype = {
     return portable;
   },
 
+  newSystemLoginMsg: function(pswd) {
+    var values = {
+      lead: "pswd",
+      acronym: this.user,
+      password: pswd,
+    };
+    var portable = JSON.stringify(values);
+    return portable;
+  },
+
+
   newSystemInitMsg: function() {
     var values = {
       lead: "init",
@@ -143,5 +154,5 @@ MessageController.prototype = {
     };
     var portable = JSON.stringify(values);
     return portable;
-  }
+  },
 };

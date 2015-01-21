@@ -103,14 +103,14 @@ and then se the chat on your local area network, or connect to one of the public
 
 <script src="js/jquery.min.js"></script>
 
-<script src="js/ardeidaeFunctions.js"></script>
+<script src="js/ardeidae/ardeidaeFunctions.js"></script>
 
-<script src="js/messageController.js"></script>
-<script src="js/viewFeedback.js"></script>
-<script src="js/main.js"></script>
+<script src="js/ardeidae/messageController.js"></script>
+<script src="js/ardeidae/viewFeedback.js"></script>
+<script src="js/ardeidae/main.js"></script>
 
 
-<script src="js/userSimul.js"></script>
+<script src="js/ardeidae/userSimul.js"></script>
 
 </body>
 </html>
