@@ -1,17 +1,15 @@
-/*globals WebSocket, MsgControl, createBot, generateStatus, MessageController, setLoggedOffProperties*/
+/*globals WebSocket, MsgControl, CnctControl, createBot, generateStatus, MessageController, ConnectionController, setLoggedOffProperties*/
 
 /**
  * Place your JS-code here.
  */
-$(document).ready(function(){
-  'use strict';
 
-var wsLogin,
-      websocket,
-      wsSystem;
+
+//$(document).ready( function () {
+//  'use strict';
 
 var MsgControl = new MessageController();
-
+var CnctControl = new ConnectionController();
 
 /**
  * Add eventhandler to server select dropdown list and connection properties.
@@ -43,104 +41,35 @@ $('#userName').on('keypress', function(event) {
  * Also contains websocket callback functions onopen, onmessage, onclose.
  */
 $('#connect').on('click', function (event) {
+    
     var url = $('#serverUrl').prop('value');
     var userName = $('#userName').prop('value');
     var password = $('#password').prop('value');
-    console.log('PASSWORD: ' + password);
+
     if (userName === '' || userName === null) {
         generateStatus('7', 'A username is required.');
         return;
     }
-    if (websocket) {
-      websocket.close();
-      websocket = null;
-    }
     MsgControl.user = userName;
-    console.log( 'Connecting to: ' + url + ' With username: ' + MsgControl.user);
-    if ( password ) {
-      console.log('Starting login protocol');
-      wsLogin = new WebSocket( url, 'login-protocol' );
+
+    if ( CnctControl.websocket ) {
+      CnctControl.close();
     }
-    websocket = new WebSocket( url, 'broadcast-protocol' );
-    wsSystem = new WebSocket( url, 'system-protocol' );
-    generateStatus('1');
 
+    if ( password ) {     // get special protocols for protected server.
+      console.log('Starting login protocol.');
+      CnctControl.login( url, userName, password );
 
-
-/**
- * Websocket login handlers.
- */
- if ( wsLogin ) {
-  wsLogin.onopen = function() {
-    console.log('The  wsSystem is now open.');
-    if ( $('#password').prop('value') ) {
-      wsLogin.send(   // Give name and Password to server.
-              MsgControl.newSystemLoginMsg( $('#password').prop('value'))
-      );
     }
-  };
-
-  wsLogin.onmessage = function(event) {
-    var msg = JSON.parse(event.data);
-    generateStatus('7', msg.message);
-  };
-
-  wsLogin.onclose = function() {
-    console.log('The websocket is now closed.');
-
-  };
-}
-
-
-/**
- * Websocket broadcast handlers.
- */
-  websocket.onopen = function() {
-    console.log('The websocket is now open.');
-    generateStatus('2');
-  };
-
-  websocket.onmessage = function(event) {
-    var msg = JSON.parse(event.data);
-    if ( !msg.time ) {
-      if ( !MsgControl.is_own_msg(msg) ) {    // prevent own message being counted as recieved message.
-        generateStatus('4');
-      }
-        MsgControl.addToOutput(msg);
+    if ( !password ) {    // default protocols for open server.
+      console.log('Connecting to server without login protocol: ');
+      console.log( url + ' With username: ' + MsgControl.user);
+      var params = { url: url,
+                           broadcast: 'broadcast-protocol',
+                           system: 'sytem-protocol'};
+      CnctControl.connect( params );
     }
-    if ( msg.time ) {
-        MsgControl.addHistoryToOutput(msg);   // publish the history message in client.
-    }
-  };
-
-  websocket.onclose = function() {
-    console.log('The websocket is now closed.');
-    generateStatus('5');
-  };
-
-
-
-/**
- * Websocket system handlers.
- */
-  wsSystem.onopen = function() {
-    console.log('The  wsSystem is now open.');
-    wsSystem.send( MsgControl.newSystemInitMsg() );  // Give name to server.
-  };
-  wsSystem.onmessage = function(event) {
-    console.log('Receiving system message: ' + event.data + ' From: ' + event.origin);
-    var msg = JSON.parse(event.data);
-    if ( !MsgControl.is_system_msg(msg) ) {
-        if ( msg.message ) {
-          console.log('Message from server: ' + msg.message);
-        }
-        console.log('error in message from server.');
-    }
-  };
-  wsSystem.onclose = function() {
-    console.log('The wsSystem is now closed.');
-  };
-  event.preventDefault();
+    event.preventDefault();
 });
 
 
@@ -158,20 +87,20 @@ $('#connect').on('click', function (event) {
          }
   });
 
-  if(!websocket || websocket.readyState === 3) {
+  if ( !CnctControl.websocket || CnctControl.websocket.readyState === 3) {
     console.log('The websocket is not connected to a server.');
     generateStatus('6');
   } else {
     console.log(reciever);
     if ( reciever.length === 0 ) {
       console.log("Sending message: " + content);
-      websocket.send(
+      CnctControl.websocket.send(
               MsgControl.newMsg( content )
       );
       generateStatus('3');
     } else {
       console.log("Sending private message: " + content);
-      websocket.send(
+      CnctControl.websocket.send(
               MsgControl.newPrivateMsg( content, reciever )
       );
       generateStatus('3');
@@ -199,12 +128,11 @@ $('#botButton').on('click', function (event) {
  * Add eventhandler to disconnect button
  */
  $('#disconnect').on('click', function (event) {
-  if(!websocket || websocket.readyState === 3) {
+  if(!CnctControl.websocket || CnctControl.websocket.readyState === 3) {
     console.log('The websocket is not connected to a server.');
     generateStatus('6');
   } else {
-    websocket.close();
-    wsSystem.close();
+    CnctControl.close();
   }
   event.preventDefault();
 });
@@ -244,4 +172,4 @@ setLoggedOffProperties();
 
 console.log('Everything is ready.');
 
-});
+//});

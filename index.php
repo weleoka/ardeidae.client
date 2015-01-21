@@ -106,6 +106,7 @@ and then se the chat on your local area network, or connect to one of the public
 <script src="js/ardeidae/ardeidaeFunctions.js"></script>
 
 <script src="js/ardeidae/messageController.js"></script>
+<script src="js/ardeidae/connectionController.js"></script>
 <script src="js/ardeidae/viewFeedback.js"></script>
 <script src="js/ardeidae/main.js"></script>
 
