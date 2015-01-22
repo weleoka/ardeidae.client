@@ -41,7 +41,7 @@ $('#userName').on('keypress', function(event) {
  * Also contains websocket callback functions onopen, onmessage, onclose.
  */
 $('#connect').on('click', function (event) {
-    
+
     var url = $('#serverUrl').prop('value');
     var userName = $('#userName').prop('value');
     var password = $('#password').prop('value');
@@ -63,10 +63,10 @@ $('#connect').on('click', function (event) {
     }
     if ( !password ) {    // default protocols for open server.
       console.log('Connecting to server without login protocol: ');
-      console.log( url + ' With username: ' + MsgControl.user);
+      console.log( url + ' With username: ' + userName );
       var params = { url: url,
                            broadcast: 'broadcast-protocol',
-                           system: 'sytem-protocol'};
+                           system: 'system-protocol'};
       CnctControl.connect( params );
     }
     event.preventDefault();
@@ -132,7 +132,7 @@ $('#botButton').on('click', function (event) {
     console.log('The websocket is not connected to a server.');
     generateStatus('6');
   } else {
-    CnctControl.close();
+    CnctControl.closeAllConnections();
   }
   event.preventDefault();
 });

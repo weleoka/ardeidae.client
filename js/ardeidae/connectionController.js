@@ -106,8 +106,8 @@ ConnectionController.prototype = {
     };
   },
 
-  close: function () {
-    websocket.close();
-    wsSystem.close();
+  closeAllConnections: function () {
+    this.websocket.close();
+    this.wsSystem.close();
   },
  };
