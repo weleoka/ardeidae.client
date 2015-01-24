@@ -22,7 +22,7 @@
     }
 //    myTable+= '</tbody></table>';
     // $('#userTable > tbody:last');
-    console.log('TableRow: ' + tableRow);
+    // console.log('TableRow: ' + tableRow);
     var tBody = $('#userTable').find('tbody:last');
     tBody.html('');
     tBody.append(tableRow);

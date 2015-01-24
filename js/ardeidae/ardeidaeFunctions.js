@@ -1,6 +1,7 @@
 /**
  * Generate hours and minutes time-log.
  */
+ 
 var getHHMM = function() {
     var dateRaw = new Date();
     var now = dateRaw.toLocaleTimeString('en-US', { hour12: false });

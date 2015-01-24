@@ -83,6 +83,9 @@ var generateStatus = function(type, custom) {
     case "7":
         output_user.innerHTML = getHHMM() + ': ' + custom;
       break;
+    case "8":
+      output_user.innerHTML = getHHMM() + ': Sent private message.';
+      break;
     default:
       output_user.innerHTML = getHHMM() + ': feedback error.';
   }

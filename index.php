@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="img/drop.png">
     <link rel='stylesheet' type='text/css' href='css/normalize.css'>
     <link rel='stylesheet' type='text/css' href='css/boilerplate.css'>
-    <link rel='stylesheet' type='text/css' href='css/style.css'>
+    <link id='activeCss' rel='stylesheet' type='text/css' href='css/style.css'>
 
     <script src="js/modernizr.js"></script>
 </head>
@@ -21,6 +21,7 @@
 	            <nav>
 			<img id="logo" src="img/bird.jpg">
             <button id='botButton'>BOT</button>
+            <button id='stylesheetButton'>CSS</button>
 	            </nav>
 
     	<section>
@@ -106,8 +107,9 @@ and then se the chat on your local area network, or connect to one of the public
 <script src="js/ardeidae/ardeidaeFunctions.js"></script>
 
 <script src="js/ardeidae/messageController.js"></script>
-<script src="js/ardeidae/connectionController.js"></script>
 <script src="js/ardeidae/viewFeedback.js"></script>
+<script src="js/ardeidae/connectionController.js"></script>
+
 <script src="js/ardeidae/main.js"></script>
 
 
