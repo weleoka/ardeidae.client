@@ -49,6 +49,7 @@ $('#connect').on('click', function (event) {
     var url = $('#serverUrl').prop('value');
     var userName = $('#userName').prop('value');
     var password = $('#password').prop('value');
+    $('#send').off('click');  // Take away the send buttons eventhandler.
 
     if (userName === '' || userName === null) {
         generateStatus('7', 'A username is required.');
@@ -73,8 +74,6 @@ $('#connect').on('click', function (event) {
       websocket = new WebSocket( url, broadcast_protocol );
       wsSystem = new WebSocket( url, system_protocol );
     }
-    event.preventDefault();
-
 
 
 
@@ -227,12 +226,10 @@ if ( websocket ) {
       generateStatus('5');
     };
   }
-//}
+  event.preventDefault();
+}); // Closing tags for CONNECT ON CLICK EVENTHANDLER.
 
 
-
-
-});
 
 /**
  * Add eventhandler to BOT button
