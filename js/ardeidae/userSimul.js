@@ -1,12 +1,12 @@
-/*globals WebSocket */
+/*globals WebSocket, url */
 
 var botName,
       botID,
-      url2 = 'ws://127.0.0.1:8120',
       botWebsocket,
       botWsSystem,
       botCounter = 0,
       numberOfBots = 5;
+var url2 = $('#serverUrl').prop('value');
 
 
 

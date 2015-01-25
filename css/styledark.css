@@ -283,9 +283,11 @@ a:hover {
 .mainPageContainer {
     height: 520px;
 }
-
 .odd {
     background-color: #333333;
+}
+.private {
+    color: #9B7990;
 }
 
 .smallButton {

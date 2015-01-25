@@ -12,13 +12,12 @@
 var broadcast_protocol = 'broadcast-protocol';
 var system_protocol = 'system-protocol';
 var MsgControl = new MessageController();
-// var CnctControl = new ConnectionController();
+
 
 /**
  * Add eventhandler to server select dropdown list and connection properties.
  */
 $('#dropDown').on('change', function() {
-  console.log('change');
   $('#serverUrl').prop('value', $(this).prop('value'));
 });
 
@@ -73,8 +72,6 @@ $('#connect').on('click', function (event) {
       generateStatus('1');
       websocket = new WebSocket( url, broadcast_protocol );
       wsSystem = new WebSocket( url, system_protocol );
-      // websocket = new WebSocket( url, 'broadcast-protocol' );
-      // wsSystem = new WebSocket( url, 'system-protocol' );
     }
     event.preventDefault();
 
@@ -241,6 +238,7 @@ if ( websocket ) {
  * Add eventhandler to BOT button
  */
 $('#botButton').on('click', function (event) {
+  console.log('BOTTED');
   createBot();
   event.preventDefault();
 });

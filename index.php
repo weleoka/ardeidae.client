@@ -20,8 +20,8 @@
 
 	            <nav>
 			<img id="logo" src="img/bird.jpg">
-            <button id='botButton'>BOT</button>
-            <button id='stylesheetButton'>CSS</button>
+            <button id='botButton' class='smallButton'>BOT</button>
+            <button id='stylesheetButton' class='smallButton'>CSS</button>
 	            </nav>
 
     	<section>
@@ -41,7 +41,7 @@ and then se the chat on your local area network, or connect to one of the public
 			        <form>
 			        	 <input id='serverUrl' class='textInputField' type="text" value='ws://dbwebb.se:1337'>
 			        	 <input id='userName' class='textInputField' type="text" placeholder="username"><br>
-			            <select id="dropDown">
+			            <select id="dropDown" class='smallButton'>
 			                <option value="ws://dbwebb.se:1337">Remote</option>
 			                <option value="ws://127.0.0.1:8120">Local</option>
 			                <option value="ws://192.168.1.36:8120">LAN</option>
@@ -108,12 +108,12 @@ and then se the chat on your local area network, or connect to one of the public
 
 <script src="js/ardeidae/messageController.js"></script>
 <script src="js/ardeidae/viewFeedback.js"></script>
-<script src="js/ardeidae/connectionController.js"></script>
+<script src="js/ardeidae/userSimul.js"></script>
 
 <script src="js/ardeidae/main.js"></script>
 
 
-<script src="js/ardeidae/userSimul.js"></script>
+
 
 </body>
 </html>
