@@ -25,24 +25,24 @@ $('#dropDown').on('change', function() {
   $('#serverUrl').prop('value', $(this).prop('value'));
 });
 
-// Make sure the user connects when hitting enter on adress or username field.
+// Make sure the user connects when hitting enter on adress, username or password field.
 $('#serverUrl').on('keypress', function(event) {
     if (event.keyCode === 13) {
-      $('#connect').trigger('click');
+      $('#connectionHandler').trigger('custom');
       event.preventDefault();
     }
 });
 
 $('#userName').on('keypress', function(event) {
     if (event.keyCode === 13) {
-      $('#connect').trigger('click');
+      $('#connectionHandler').trigger('custom');
       event.preventDefault();
     }
 });
 
 $('#password').on('keypress', function(event) {
     if (event.keyCode === 13) {
-      $('#connect').trigger('click');
+      $('#connectionHandler').trigger('custom');
       event.preventDefault();
     }
 });
