@@ -2,6 +2,14 @@
 WebSocket Messaging Client for Ardeidae messaging server.
 =================================================
 
+Versions
+---------------
+v1.0.0
+v1.0.1
+v1.1.0
+v1.1.1
+v1.1.2 (current)
+
 
 Browser Support
 ---------------
@@ -10,7 +18,7 @@ Requires Javascript and enabled websockets in the browser.
 
 Overview
 --------
-
+This is a simple client for linking up to a Ardeidae chat server. It's made using JQuery.
 
 
 
@@ -50,20 +58,23 @@ Current Features of Ardeidae client:
 * Quick posting and login, accepts keyboard navigation.
 * Private messaging to single or multiple peers.
 * Visual feedback on operations and progress.
-* Live stylesheet switching linke daytime/night-time modes.
+* Live stylesheet switching like daytime/night-time modes.
+* Login to private server.
+* New user registration possible.
 
-* Bots to test functionality... add them on the BotButton!
+* Bots to test functionality... add them on the BotButton... only for open server mode.
 
 
 
 Known Issues/Missing Features:
 ------------------------------
 * Client side encryption of messages.
-* Dynamic server list and a way to notify what mode the chat server is running in.
+* Dynamic server list and a way to notify what mode each chat server is running in.
 * Chat room support.
-* Switch on and off server logging of messages.
+* Switch on and off server logging of your messages.
 * A way to retrieve conversations to review historic message exchanges.
-
+* Stop users sending blank messages.
+* Needs media queries for responsive design.
 
 
 Licence

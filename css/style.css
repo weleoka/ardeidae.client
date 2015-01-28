@@ -262,7 +262,7 @@ a:hover {
     text-align: center;
 }
 #messagebox #inputbox #message{
-    width: 400px;
+    width: 90%;
 }
 #messagebox #inputbox #buttonbox {
     padding: 1em;
@@ -288,6 +288,10 @@ a:hover {
 }
 #password {
     float: right;
+}
+#eMail {
+    float: right;
+    clear: both;
 }
 
 

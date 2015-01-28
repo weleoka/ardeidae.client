@@ -7,10 +7,6 @@
  var populateUsersList = function(users) {
     var i,
           tableRow = '';
-        // Clear the user list field.
-
-//    var myTable= '<table id="userTable">';
-//    myTable+= '<thead> <th>Name</th><th>ID</th><th><input id="selectAll" type="checkbox"/></th> </thead><tbody>';
     for ( i = 0; i < users.length; i ++ ) {
       if (users[i]) {
         tableRow+= '<tr id="' + users[i].id + '">';
@@ -20,13 +16,9 @@
         tableRow+= '</tr>';
       }
     }
-//    myTable+= '</tbody></table>';
-    // $('#userTable > tbody:last');
-    // console.log('TableRow: ' + tableRow);
     var tBody = $('#userTable').find('tbody:last');
     tBody.html('');
     tBody.append(tableRow);
-    // $('#userTable tbody').html(tableRow);
 };
 
 
@@ -40,6 +32,8 @@ var getHHMM = function() {
     return now.substring(0, now.length-3);
 };
 
+
+
 /**
  * Convert UTC time to local HHMM.
  */
@@ -48,6 +42,7 @@ var convertUtcToLocalHHMM = function(timestamp) {
     var time = utc.toLocaleTimeString('en-US', { hour12: false });
     return time.substring(0, time.length-3);
 };
+
 
 
 /**
@@ -136,7 +131,7 @@ MessageController.prototype = {
     return portable;
   },
 
-  newSystemLoginMsg: function(pswd) {
+  newSystemLoginMsg: function (pswd) {
     var values = {
       lead: "pswd",
       acronym: this.user,
@@ -146,6 +141,14 @@ MessageController.prototype = {
     return portable;
   },
 
+  newSystemCreateUserMsg: function (details) {
+    var values = {
+      lead: "rgstr",
+      newUserDetails: details,
+    };
+    var portable = JSON.stringify(values);
+    return portable;
+  },
 
   newSystemInitMsg: function() {
     var values = {

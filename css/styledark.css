@@ -371,6 +371,10 @@ a:hover {
 #password {
     float: right;
 }
+#eMail {
+    float: right;
+    clear: both;
+}
 
 
 

@@ -47,10 +47,14 @@ and then se the chat on your local area network, or connect to one of the public
 			                <option value="ws://192.168.1.36:8120">LAN</option>
 			                <option value="ws://nodejs2.student.bth.se:8120">ONLINE</option>
 			            </select>
-			        	 <input id='password' class='textInputField' type="text" name="password" placeholder="password (if required)">
+			        	 <input id='password' class='textInputField' type="text" placeholder="password (if required)">
+			        	 <input id='eMail' class='textInputField' type="text" placeholder="email">
 			        </form>
 			        <div id='connectbuttonbox'>
 			            <button id='connect' class='smallButton'>Connect</button>
+			            <button id='login' class='smallButton'>Login</button>
+			            <button id='register' class='smallButton'>Register</button>
+			            <span id='connectionHandler' class='hidden'></span>
 			        </div>
 			    </div>
 			<footer>

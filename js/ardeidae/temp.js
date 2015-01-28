@@ -37,7 +37,7 @@ ConnectionController.prototype = {
         generateStatus('7', msg.message);
       }
     };
-
+    
     wsLogin.onclose = function() {
       console.log('The wsLogin connection is now closed.');
     };
