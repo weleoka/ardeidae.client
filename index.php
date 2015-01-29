@@ -2,12 +2,11 @@
 <html lang='en' class='no-js'>
 <head>
     <meta charset=utf-8>
-    <title>HTML5 websockets</title>
-    <link rel="shortcut icon" href="img/drop.png">
+    <title>Ardeidae</title>
+    <link rel="shortcut icon" href="favicon.ico">
     <link rel='stylesheet' type='text/css' href='css/normalize.css'>
     <link rel='stylesheet' type='text/css' href='css/boilerplate.css'>
     <link id='activeCss' rel='stylesheet' type='text/css' href='css/style.css'>
-
     <script src="js/modernizr.js"></script>
 </head>
 <body>
@@ -28,10 +27,9 @@
                             <article id='createConnection' class='mainPageContainer'>
                             	<div id='welcome'>
 <h3>Welcome Ardeidae, a chat-client using websockets</h3>
-<p>This is a simple chat service using websockets. Please read the <a href="none">usage rules</a>
-and then login and get chatting to others!</p>
-<p>There are some different servers to choose from. You can use the included server if you run it with "nodejs"
-and then se the chat on your local area network, or connect to one of the public servers online.</p>
+<p>This is a simple chat service using websockets.</p>
+<p>There are different servers to choose from. You can also very easily start your own Ardeidae server. You will just need a web server and node.js installed first!</p>
+<p>So with Ardeidae you can have a private chat circle on your local area network, or connect to one of the public or private servers online.</p>
 <p>Enjoy!</p>
                     		</div>
                         	<header>

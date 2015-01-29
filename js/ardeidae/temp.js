@@ -1,4 +1,19 @@
 
+      // Get the Server details. Only same origin server.
+/*    $.ajax({
+        type: 'post',
+        url: httpUrl,
+        dataType: 'json',
+        success: function(data){
+          console.log(data);
+          console.log('Ajax request returned successfully. Server info updated.');
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+          console.log('Ajax request failed: ' + textStatus + ', ' + errorThrown);
+        }
+    });*/
+
+
 function ConnectionController() {
   // MsgControl = MsgControl;
   this.wsLogin = null;

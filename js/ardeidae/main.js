@@ -1,5 +1,6 @@
 /*globals WebSocket, MsgControl, websocket: true, wsSystem: true, wsLogin: true, createBot,
-generateStatus, MessageController, ConnectionController, setLoggedOffProperties*/
+generateStatus, MessageController, ConnectionController, setLoggedOffProperties,
+createCorsRequest */
 
 /**
  * Place your JS-code here.
@@ -18,12 +19,23 @@ var websocket,
       wsSystem,
       wsLogin;
 
+
+
 /**
  * Add eventhandler to server select dropdown list and connection properties.
  */
 $('#dropDown').on('change', function() {
-  $('#serverUrl').prop('value', $(this).prop('value'));
+    var wsUrl = $(this).prop('value');
+// Update teh textbox with the dropDown list url.
+    $('#serverUrl').prop('value', wsUrl);
+ // Change from ws:// to http:// in url.
+    var httpUrl = 'http://' + wsUrl.slice(5, wsUrl.length);
+    console.log('HTTP URL is: ' + httpUrl);
+// Get meta data from server.
+    createCorsRequest ('POST', httpUrl);
 });
+
+
 
 // Make sure the user connects when hitting enter on adress, username or password field.
 $('#serverUrl').on('keypress', function(event) {
