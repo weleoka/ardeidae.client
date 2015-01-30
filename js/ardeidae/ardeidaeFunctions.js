@@ -22,19 +22,21 @@ var nl2br = function (str) {
 
 
 // Create the XHR object, browser compliance testing.
-function createCorsRequest(method, url) {
+function createCorsRequest(method, url, callback) {
+  // Change from ws:// to http:// in url.
+    var httpUrl = 'http://' + url.slice(5, url.length);
+    
     $.ajax({
       type: method,
-      url: url,
-      contentType: "application/json",
+      url: httpUrl,
+      contentType: 'application/json',
       data: JSON.stringify({
-            name: "Tricia",
+            name: 'clientName',
             age: 37
       }),
-      dataType: "text",
+      dataType: 'text',
       success: function(data){
-        console.log(data);
-        console.log('Ajax request returned successfully.');
+        callback(data);
       },
       error: function(textStatus, errorThrown){ // jqXHR
         console.log(textStatus);

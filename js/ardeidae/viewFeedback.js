@@ -19,7 +19,9 @@ messageArticle:true, outputDiv, posts, userCounterDiv:true, content, userDiv, ur
 /**
  * Set viewing properties for JS-enabled browser LOGGED OFF.
  */
-var setLoggedOffProperties = function() {
+var setLoggedOffProperties = function(currentServer) {
+
+    console.log(currentServer);
     $('#status').html('No connection.');
     messageArticle.addClass('hidden');
     connectArticle.removeClass('hidden');
@@ -30,7 +32,51 @@ var setLoggedOffProperties = function() {
     userTable.addClass('hidden');
     checkAll.prop('checked', false);
       //  serverURL.disabled='disabled'; // Delete this part if you want the URL input box enabled
+
+    // Settings depending on server meta data:
+    if ( currentServer === null ) {
+      // $('#').addClass('hidden');
+      $('#connectInputs').addClass('hidden');
+      $('#connectbuttonbox').addClass('hidden');
+
+    } else if (currentServer !== null ) {
+      $('#connectInputs').removeClass('hidden');
+      $('#connectbuttonbox').removeClass('hidden');
+
+      if ( currentServer.hasOwnProperty('privateMode') ) {
+
+        if ( currentServer.privateMode ) {
+          $('#connectButton').prop('value', 'privateConnect' );
+          $('#password').removeClass('hidden');
+          // $('#loginButton').removeClass('hidden');
+          $('#registerButton').removeClass('hidden');
+
+        } else {
+          $('#connectButton').prop('value', 'publicConnect');
+          $('#password').addClass('hidden');
+          // $('#loginButton').addClass('hidden');
+          $('#registerButton').addClass('hidden');
+        }
+      }
+    }
+
 };
+/*
+      $('#userName').addClass('hidden');
+      $('#password').addClass('hidden');
+      $('#eMail').addClass('hidden');
+               <input id='serverUrl' class='textInputField' type="text" value='ws://dbwebb.se:1337'>
+                 <input id='userName' class='textInputField' type="text" placeholder="username"><br>
+                  <select id="dropDown" class='smallButton'></select>
+                 <input id='password' class='textInputField' type="text" placeholder="password (if required)">
+                 <input id='eMail' class='textInputField' type="text" placeholder="email">
+              </form>
+              <div id='connectbuttonbox'>
+                  <button id='connectButton' class='smallButton'>Connect</button>
+                  <button id='loginButton' class='smallButton'>Login</button>
+                  <button id='registerButton' class='smallButton'>Register</button>
+*/
+
 
 
 /**

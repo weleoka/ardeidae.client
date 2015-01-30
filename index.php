@@ -36,22 +36,26 @@
                                 		<h1>HTML5 websockets</h1>
                        	 </header>
 			    <div id='connectbox'>
-			        <form>
+
+			        	 <div id='serverSelectInfo'>
 			        	 <input id='serverUrl' class='textInputField' type="text" value='ws://dbwebb.se:1337'>
-			        	 <input id='userName' class='textInputField' type="text" placeholder="username"><br>
+			        	 <br>
 			            <select id="dropDown" class='smallButton'>
 			                <option value="ws://dbwebb.se:1337">Remote</option>
 			                <option value="ws://127.0.0.1:8120">Local</option>
 			                <option value="ws://192.168.1.36:8120">LAN</option>
 			                <option value="ws://nodejs2.student.bth.se:8120">ONLINE</option>
 			            </select>
-			        	 <input id='password' class='textInputField' type="text" placeholder="password (if required)">
-			        	 <input id='eMail' class='textInputField' type="text" placeholder="email">
-			        </form>
+			            </div>
+			            <div id='connectInputs'>
+				            <input id='userName' class='textInputField' type="text" placeholder="username"><br>
+				        	 <input id='password' class='textInputField' type="text" placeholder="password">
+				        	 <!-- <input id='eMail' class='textInputField' type="text" placeholder="email"> -->
+			        	 </div>
+
 			        <div id='connectbuttonbox'>
-			            <button id='connect' class='smallButton'>Connect</button>
-			            <button id='login' class='smallButton'>Login</button>
-			            <button id='register' class='smallButton'>Register</button>
+			            <button id='connectButton' class='smallButton' value='publicConnect'>Connect</button>
+			            <button id='registerButton' class='smallButton'>Register</button>
 			            <span id='connectionHandler' class='hidden'></span>
 			        </div>
 			    </div>

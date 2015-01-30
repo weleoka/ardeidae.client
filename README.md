@@ -45,11 +45,6 @@ Or by Node Package Manager:
 
     $ npm install ardeidae
 
-Go to the ardeidae module directory and run (default listening port is 8120):
-
-    $ node ardeidae.server.js
-
-
 
 
 Current Features of Ardeidae client:

@@ -3,7 +3,7 @@ generateStatus, MessageController, ConnectionController, setLoggedOffProperties,
 createCorsRequest */
 
 /**
- * Place your JS-code here.
+ *  Place your JS-code here.
  */
 
 
@@ -14,45 +14,48 @@ createCorsRequest */
 var broadcast_protocol = 'broadcast-protocol';
 var system_protocol = 'system-protocol';
 var MsgControl = new MessageController();
+var CurrentServer = null;
 
 var websocket,
       wsSystem,
       wsLogin;
 
-
+/**
+ *  Callback function to process CORS data
+ */
+function processServerData (data) {
+      var dataa = JSON.parse(data);
+      setLoggedOffProperties(dataa);
+}
 
 /**
- * Add eventhandler to server select dropdown list and connection properties.
+ *  Add eventhandler to server select dropdown list and connection properties.
  */
 $('#dropDown').on('change', function() {
     var wsUrl = $(this).prop('value');
-// Update teh textbox with the dropDown list url.
+// Update the textbox with the dropDown list url.
     $('#serverUrl').prop('value', wsUrl);
- // Change from ws:// to http:// in url.
-    var httpUrl = 'http://' + wsUrl.slice(5, wsUrl.length);
-    console.log('HTTP URL is: ' + httpUrl);
-// Get meta data from server.
-    createCorsRequest ('POST', httpUrl);
+// This is to get server meta data.
+    createCorsRequest('POST', wsUrl, processServerData);
 });
-
 
 
 // Make sure the user connects when hitting enter on adress, username or password field.
-$('#serverUrl').on('keypress', function(event) {
+$('body').on('keypress', 'input#serverUrl', function(event) {
     if (event.keyCode === 13) {
       $('#connectionHandler').trigger('custom');
       event.preventDefault();
     }
 });
 
-$('#userName').on('keypress', function(event) {
+$('body').on('keypress', 'input#userName', function(event) {
     if (event.keyCode === 13) {
       $('#connectionHandler').trigger('custom');
       event.preventDefault();
     }
 });
 
-$('#password').on('keypress', function(event) {
+$('body').on('keypress', 'input#password', function(event) {
     if (event.keyCode === 13) {
       $('#connectionHandler').trigger('custom');
       event.preventDefault();
@@ -62,30 +65,26 @@ $('#password').on('keypress', function(event) {
 
 
 /**
- * Add eventhandler to Register, login, and connect buttons
+ *  Add eventhandler to Register, login, and connect buttons
  */
-$('#register').on('click', function (event) {
-    $('#connectionHandler').trigger( 'custom', 'register' );
+$('body').on('click', 'button#registerButton', function (event) {
+    $('#connectionHandler').trigger( 'custom', 'registerConnect' );
     event.preventDefault();
 });
 
-$('#login').on('click', function (event) {
-    $('#connectionHandler').trigger( 'custom', 'login' );
-    event.preventDefault();
-});
-
-$('#connect').on('click', function (event) {
-    $('#connectionHandler').trigger( 'custom', 'openConnect' );
+$('body').on('click', 'button#connectButton', function (event) {
+    $('#connectionHandler').trigger( 'custom' );
     event.preventDefault();
 });
 
 
 
 /**
- * Custom event handler to create the websocket connection.
- * Also contains websocket callback functions onopen, onmessage, onclose.
+ *  Custom event handler to create the websocket connection.
+ *  Also contains websocket callback functions onopen, onmessage, onclose.
  */
 $('#connectionHandler').on('custom', function ( event, arg1 ) {
+    if ( !arg1 ) { arg1 = $('#connectButton').prop('value'); }
     var url = $('#serverUrl').prop('value');
     var userName = $('#userName').prop('value');
     var password = $('#password').prop('value');
@@ -97,9 +96,7 @@ $('#connectionHandler').on('custom', function ( event, arg1 ) {
 // Take away eventhandlers from html elements.
     $('#send').off('click');
     $('#disconnect').off('click');
-    // $('#register').off('click');
-
-
+    // $('#registerConnect').off('click');
 
 // Check if websocket is already established, close if true.
     if ( websocket ) {
@@ -112,14 +109,15 @@ $('#connectionHandler').on('custom', function ( event, arg1 ) {
         generateStatus('7', 'A username is required.');
         return;
     }
+    console.log('Argument is: ' + arg1);
 // operations requiring the login protocol.
-    if ( arg1 === 'register' ) {
+    if ( arg1 === 'registerConnect' ) {
       if ( password && eMail ) {
         wsLogin = new WebSocket( url, 'login-protocol' );
       } else {
         generateStatus('7', 'Please fill in eMail and password fields');
       }
-    } else if ( arg1 === 'login' ) {
+    } else if ( arg1 === 'privateConnect' ) {
       if ( password ) {
         wsLogin = new WebSocket( url, 'login-protocol' );
       } else {
@@ -127,7 +125,7 @@ $('#connectionHandler').on('custom', function ( event, arg1 ) {
       }
     }
 // open server connect.
-    else if ( arg1 === 'openConnect' ) {    // default protocols for open server.
+    else if ( arg1 === 'publicConnect' ) {    // default protocols for open server.
       console.log('Connecting to: ' + url + ' With username: ' + userName + ' and with default protocols.');
       generateStatus('1');
 
@@ -142,21 +140,20 @@ $('#connectionHandler').on('custom', function ( event, arg1 ) {
 
 
 
-
   /**
-   * wsLogin handlers.
+   *  wsLogin handlers.
    */
 if ( wsLogin ) {
     wsLogin.onopen = function () {
         console.log('The wsLogin connection is now open.');
         console.log( 'Connecting to: ' + url + ' With username: ' + userName);
 
-        if ( arg1 === 'register' ) {
+        if ( arg1 === 'registerConnect' ) {
           console.log('Starting login protocol to register new user.');
           this.send(   // Give new user details to server.
                   MsgControl.newSystemCreateUserMsg( newUserDetails )
           );
-        } else if ( arg1 === 'login' ) {     // get special protocols for protected server.
+        } else if ( arg1 === 'privateConnect' ) {     // get special protocols for protected server.
           console.log('Starting users protocol to login.');
           if (password === '' || password === null) {
               generateStatus('7', 'A password is required.');
@@ -173,10 +170,11 @@ if ( wsLogin ) {
       var msg = JSON.parse(event.data);
       if ( msg.lead === 'success' ) {
         $('#password').prop('value', null);
+// Update connection protocols with servers protocol key.
         broadcast_protocol = msg.broadcast_protocol;
         system_protocol = msg.system_protocol;
         generateStatus('7', msg.message);
-        $('#connectionHandler').trigger('custom', 'openConnect');
+        $('#connectionHandler').trigger('custom', 'publicConnect');
       } else if ( msg.lead === 'userSaved' ) {
         $('#password').prop('value', null);
         $('#eMail').prop('value', null);
@@ -357,7 +355,7 @@ $('#selectAll').on('click', function() {  //on click
 
 
 
-setLoggedOffProperties();
+setLoggedOffProperties(CurrentServer);
 
 
 
