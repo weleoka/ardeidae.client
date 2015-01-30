@@ -8,8 +8,8 @@ v1.0.0
 v1.0.1
 v1.1.0
 v1.1.1
-v1.1.2 (current)
-
+v1.1.2
+v1.1.3 (current)
 
 Browser Support
 ---------------
@@ -49,13 +49,14 @@ Or by Node Package Manager:
 
 Current Features of Ardeidae client:
 -----------------
+* After selecting a server the client makes a request to the server and adapts GUI depending on what the servers responds. If the server is in public or private mode the password field will be visible or not. The same for registering new user. The request is made using ajax and is set up to enable CORS.
 * Maintain linebreaks in messages (alt + enter).
 * Quick posting and login, accepts keyboard navigation.
 * Private messaging to single or multiple peers.
 * Visual feedback on operations and progress.
 * Live stylesheet switching like daytime/night-time modes.
 * Login to private server.
-* New user registration possible.
+* New user registration directly with chat client.
 
 * Bots to test functionality... add them on the BotButton... only for open server mode.
 
