@@ -1,45 +1,58 @@
 /*globals getHHMM, MsgControl, status:true, disconnect, connectArticle:true,
-messageArticle:true, outputDiv, posts, userCounterDiv:true, content, userDiv, url */
+messageArticle:true, outputDiv, posts, userCounterDiv:true, content, userDiv, url,
+Broadcast_protocol:true, Default_BCprotocol, System_protocol:true, Default_SYSprotocol */
 
     // main page elements.
     var connectArticle = $('#createConnection'),
           messageArticle = $('#createMessage');
 
-   // User information divs
+   // User information divs.
     var userCounterDiv = $('#userCounter'),
           userDiv = $('#userList'),
           userTable = $('#userTable');
 
-    var checkAll = $('#checkAll');
+    // Input fields for not connected to server elements.
 
-    var status = $('#status'),
-          disconnect = $('#disconnect');
+
+
+    // Connected to server elements.
+   // var checkAll = $('#checkAll');
+    // var status = $('#status'),
+    //      disconnect = $('#disconnect');
 
 
 /**
- * Set viewing properties for JS-enabled browser LOGGED OFF.
+ *  Set viewing properties for JS-enabled browser LOGGED OFF.
  */
-var setLoggedOffProperties = function(currentServer) {
+var setLoggedOffProperties = function (currentServer) {
+    var eMail = $('eMail');
 
-    console.log(currentServer);
     $('#status').html('No connection.');
     messageArticle.addClass('hidden');
     connectArticle.removeClass('hidden');
-    disconnect.addClass('hidden');  // hide disconnect button
+    $('#disconnect').addClass('hidden');          // hide disconnect button
     $('#message').prop('value', '');         // Clear message input field.
-    $('#posts').html ('');
+    $('#posts').html ('');                         // Clear chat message field.
     userCounterDiv.addClass('hidden');
     userTable.addClass('hidden');
-    checkAll.prop('checked', false);
-      //  serverURL.disabled='disabled'; // Delete this part if you want the URL input box enabled
+    $('#checkAll').prop('checked', false);        // Uncheck private messaging checkbox.
+    eMail.addClass('hidden');
+    eMail.prop('value', null);
+    // $('#connectInputs#eMail').remove();
+    // serverURL.disabled='disabled'; // Delete this part if you want the URL input box enabled
+
 
     // Settings depending on server meta data:
-    if ( currentServer === null ) {
-      // $('#').addClass('hidden');
+    if ( !currentServer ) {
+      // Reset to server selected defaults
+      $('#dropDown').prop('value', 'default');
+      $('input#serverUrl').prop('value', 'ws://');
+      // $('#dropDown').trigger('change');
+
       $('#connectInputs').addClass('hidden');
       $('#connectbuttonbox').addClass('hidden');
 
-    } else if (currentServer !== null ) {
+    } else if ( currentServer ) {
       $('#connectInputs').removeClass('hidden');
       $('#connectbuttonbox').removeClass('hidden');
 
@@ -61,48 +74,32 @@ var setLoggedOffProperties = function(currentServer) {
     }
 
 };
-/*
-      $('#userName').addClass('hidden');
-      $('#password').addClass('hidden');
-      $('#eMail').addClass('hidden');
-               <input id='serverUrl' class='textInputField' type="text" value='ws://dbwebb.se:1337'>
-                 <input id='userName' class='textInputField' type="text" placeholder="username"><br>
-                  <select id="dropDown" class='smallButton'></select>
-                 <input id='password' class='textInputField' type="text" placeholder="password (if required)">
-                 <input id='eMail' class='textInputField' type="text" placeholder="email">
-              </form>
-              <div id='connectbuttonbox'>
-                  <button id='connectButton' class='smallButton'>Connect</button>
-                  <button id='loginButton' class='smallButton'>Login</button>
-                  <button id='registerButton' class='smallButton'>Register</button>
-*/
-
 
 
 /**
- * Set viewing properties for JS-enabled browser LOGGED ON.
+ *  Set viewing properties for JS-enabled browser LOGGED ON.
  */
-var setLoggedOnProperties = function(user) {
+var setLoggedOnProperties = function() {
+    var user = $('#userName').prop('value');
     $('#status').html('Your know as: ' + user + ' ');
     messageArticle.removeClass('hidden');
     userCounterDiv.removeClass('hidden');
 
-    disconnect.removeClass('hidden');
+    $('#disconnect').removeClass('hidden');
     connectArticle.addClass('hidden');
 
     userTable.removeClass('hidden');
-    checkAll.prop('checked', false);
+    $('#checkAll').prop('checked', false);
 };
 
 
 
 /**
- * Function to give user feedback and modify layout depending on connection status.
- * 1: connecting, 2: success, 3: send, 4: recieve, 5:disconnect, 6:error, 7:custom.
+ *  Function to give user feedback and modify layout depending on connection status.
+ *  1: connecting, 2: success, 3: send, 4: recieve, 5:disconnect, 6:error, 7:custom.
  */
 var generateStatus = function(type, custom) {
   var url = $('#serverUrl').prop('value');
-  var user = $('#userName').prop('value');
   var outputDiv = $('#output');
   var output_user = document.createElement('p');
   switch (type) {
@@ -110,7 +107,6 @@ var generateStatus = function(type, custom) {
       output_user.innerHTML = getHHMM() + ': Connecting to:\n' + url + '...';
       break;
     case "2":
-      setLoggedOnProperties(user);
       output_user.innerHTML = getHHMM() + ': Established websocket.';
       break;
     case "3":
@@ -120,7 +116,6 @@ var generateStatus = function(type, custom) {
       output_user.innerHTML = getHHMM() + ': Recieved message.';
       break;
     case "5":
-      setLoggedOffProperties();
       output_user.innerHTML = getHHMM() + ': Closed connection to:\n' + url;
       break;
     case "6":

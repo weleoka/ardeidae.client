@@ -41,18 +41,19 @@
 			        	 <input id='serverUrl' class='textInputField' type="text" value='ws://dbwebb.se:1337'>
 			        	 <br>
 			            <select id="dropDown" class='smallButton'>
-			                <option value="ws://dbwebb.se:1337">Remote</option>
-			                <option value="ws://127.0.0.1:8120">Local</option>
+			                <option value="default" selected>Select server</option>
+			                <option value="ws://dbwebb.se:1337">MosWsServer</option>
+			                <option value="ws://127.0.0.1:8120">Localhost</option>
 			                <option value="ws://192.168.1.36:8120">LAN</option>
-			                <option value="ws://nodejs2.student.bth.se:8120">ONLINE</option>
+			                <option value="ws://nodejs2.student.bth.se:8120">BTH2</option>
+			                <option value="ws://nodejs1.student.bth.se:8120">BTH1</option>
 			            </select>
 			            </div>
 			            <div id='connectInputs'>
 				            <input id='userName' class='textInputField' type="text" placeholder="username"><br>
-				        	 <input id='password' class='textInputField' type="text" placeholder="password">
-				        	 <!-- <input id='eMail' class='textInputField' type="text" placeholder="email"> -->
+				        	 <input id='password' class='textInputField' type="password" placeholder="password">
+				        	 <!-- <input id='eMail' class='textInputField hidden' type="text" placeholder="email"> -->
 			        	 </div>
-
 			        <div id='connectbuttonbox'>
 			            <button id='connectButton' class='smallButton' value='publicConnect'>Connect</button>
 			            <button id='registerButton' class='smallButton'>Register</button>
@@ -110,6 +111,7 @@
 
 <script src="js/jquery.min.js"></script>
 
+<script src="js/ardeidae/ardeidaeVariables.js"</script>
 <script src="js/ardeidae/ardeidaeFunctions.js"></script>
 
 <script src="js/ardeidae/messageController.js"></script>

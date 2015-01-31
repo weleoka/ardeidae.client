@@ -46,6 +46,15 @@ var convertUtcToLocalHHMM = function(timestamp) {
 
 
 /**
+ *  Basic filter for maintaining linebreaks etc.
+ */
+var nl2br = function (str) {
+    var breakTag = '<br>';      // (is_xhtml || is_xhtml === 'undefined') ? '<br />' :
+    return (str + ' ').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+};
+
+
+/**
  * Handling of messages from server.
  */
 function MessageController() {

@@ -1,40 +1,71 @@
-/*globals WebSocket, MsgControl, websocket: true, wsSystem: true, wsLogin: true, createBot,
-generateStatus, MessageController, ConnectionController, setLoggedOffProperties,
-createCorsRequest */
+/*globals WebSocket, MsgControl, VariablesController, FunctionController, MessageController, ConnectionController,
+websocket: true, wsSystem: true, wsLogin: true, createBot,
+generateStatus, setLoggedOffProperties, setLoggedOnProperties,
+createCorsRequest, processServerData,
+MutationObserver */
 
 /**
  *  Place your JS-code here.
  */
+ $(document).ready( function () {
+ 'use strict';
 
-
-//$(document).ready( function () {
-//  'use strict';
-
-
-var broadcast_protocol = 'broadcast-protocol';
-var system_protocol = 'system-protocol';
 var MsgControl = new MessageController();
+var ArdeiVars = new VariablesController();
+// var ArdeiFunc = new FunctionController();
 var CurrentServer = null;
 
 var websocket,
       wsSystem,
       wsLogin;
 
+
 /**
  *  Callback function to process CORS data
  */
-function processServerData (data) {
+var processServerData = function (data) {
       var dataa = JSON.parse(data);
       setLoggedOffProperties(dataa);
-}
+};
+
+
+
+/**
+ *  Make an Anax request... CORS support enabled, browser compliance mode.
+ */
+var createCorsRequest = function (method, url, callback) {
+  // Change from ws:// to http:// in url.
+    var httpUrl = 'http://' + url.slice(5, url.length);
+
+    $.ajax({
+      type: method,
+      url: httpUrl,
+      contentType: 'application/json',
+      data: JSON.stringify({
+            name: 'clientName',
+            age: 37
+      }),
+      dataType: 'text',
+      success: function(data){
+        callback(data);
+      },
+      error: function(textStatus, errorThrown){ // jqXHR
+        console.log(textStatus);
+        console.log('Ajax request failed: ' + textStatus + ', ' + errorThrown);
+      }
+    });
+};
+
+
 
 /**
  *  Add eventhandler to server select dropdown list and connection properties.
  */
 $('#dropDown').on('change', function() {
+    ArdeiVars.resetProtocols();
     var wsUrl = $(this).prop('value');
 // Update the textbox with the dropDown list url.
-    $('#serverUrl').prop('value', wsUrl);
+    $('input#serverUrl').prop('value', wsUrl);
 // This is to get server meta data.
     createCorsRequest('POST', wsUrl, processServerData);
 });
@@ -85,7 +116,8 @@ $('body').on('click', 'button#connectButton', function (event) {
  */
 $('#connectionHandler').on('custom', function ( event, arg1 ) {
     if ( !arg1 ) { arg1 = $('#connectButton').prop('value'); }
-    var url = $('#serverUrl').prop('value');
+    console.log('Connection controller argument is: ' + arg1);
+    var url = $('input#serverUrl').prop('value');
     var userName = $('#userName').prop('value');
     var password = $('#password').prop('value');
     var eMail = $('#eMail').prop('value');
@@ -93,6 +125,7 @@ $('#connectionHandler').on('custom', function ( event, arg1 ) {
                                        email: eMail,
                                        password: password };
     MsgControl.user = userName;
+
 // Take away eventhandlers from html elements.
     $('#send').off('click');
     $('#disconnect').off('click');
@@ -104,19 +137,29 @@ $('#connectionHandler').on('custom', function ( event, arg1 ) {
       websocket.close();
       wsSystem.close();
     }
+
 // User name is required for all actions.
     if (userName === '' || userName === null) {
         generateStatus('7', 'A username is required.');
         return;
     }
-    console.log('Argument is: ' + arg1);
-// operations requiring the login protocol.
+
+// register new user.
     if ( arg1 === 'registerConnect' ) {
       if ( password && eMail ) {
         wsLogin = new WebSocket( url, 'login-protocol' );
       } else {
         generateStatus('7', 'Please fill in eMail and password fields');
+        $('<input />', {
+            id: 'eMail',
+            class: 'textInputField',
+            type: 'email',
+            placeholder: 'email address'
+        }).appendTo('#connectInputs');
+        // $('#eMail').removeClass('hidden');
       }
+
+// login with user.
     } else if ( arg1 === 'privateConnect' ) {
       if ( password ) {
         wsLogin = new WebSocket( url, 'login-protocol' );
@@ -124,15 +167,16 @@ $('#connectionHandler').on('custom', function ( event, arg1 ) {
         generateStatus('7', 'Password required.');
       }
     }
+
 // open server connect.
     else if ( arg1 === 'publicConnect' ) {    // default protocols for open server.
       console.log('Connecting to: ' + url + ' With username: ' + userName + ' and with default protocols.');
       generateStatus('1');
 
-      websocket = new WebSocket( url, broadcast_protocol );
+      websocket = new WebSocket( url, ArdeiVars.getBcProtocol() );
       websocket.onerror = function () { console.log('Failed to connect'); };
 
-      wsSystem = new WebSocket( url, system_protocol );
+      wsSystem = new WebSocket( url, ArdeiVars.getSysProtocol() );
       wsSystem.onerror = function () { console.log('Failed to connect'); };
     } else {
       console.log('no recognised parameter passed to connection handler.');
@@ -168,17 +212,26 @@ if ( wsLogin ) {
     };
     wsLogin.onmessage = function(event) {
       var msg = JSON.parse(event.data);
+// Login successful.
       if ( msg.lead === 'success' ) {
         $('#password').prop('value', null);
+
 // Update connection protocols with servers protocol key.
-        broadcast_protocol = msg.broadcast_protocol;
-        system_protocol = msg.system_protocol;
+        ArdeiVars.setBcProtocol( msg.broadcast_protocol );
+        ArdeiVars.setSysProtocol( msg.system_protocol );
         generateStatus('7', msg.message);
+
+// Trigger the connect handler as publicConnect now we have the protocols.
         $('#connectionHandler').trigger('custom', 'publicConnect');
+
+// New user successfully inserted to db.
       } else if ( msg.lead === 'userSaved' ) {
-        $('#password').prop('value', null);
-        $('#eMail').prop('value', null);
+        // $('#password').prop('value', null);
+        $('input#eMail').remove(); // Trying to remove eMAil field from DOM after user created.... no luck
         generateStatus('7', msg.message);
+        // $('#connectionHandler').trigger('custom', 'privateConnect');
+
+// Server general message.
       } else {
         generateStatus('7', msg.message);
       }
@@ -196,6 +249,8 @@ if ( wsLogin ) {
 if ( wsSystem ) {
     wsSystem.onopen = function() {
       console.log('The wsSystem connection is now open.');
+      generateStatus('2');
+      setLoggedOnProperties();
       this.send( MsgControl.newSystemInitMsg() );  // Give name to server.
     };
     wsSystem.onmessage = function(event) {
@@ -210,6 +265,9 @@ if ( wsSystem ) {
     };
     wsSystem.onclose = function() {
       console.log('The wsSystem connection is now closed.');
+      generateStatus('5');
+      ArdeiVars.resetProtocols();
+      setLoggedOffProperties();
     };
 }
 
@@ -221,7 +279,6 @@ if ( wsSystem ) {
 if ( websocket ) {
     websocket.onopen = function() {
       console.log('The websocket connection is now open.');
-      generateStatus('2');
     };
     websocket.onmessage = function(event) {
       var msg = JSON.parse(event.data);
@@ -237,7 +294,6 @@ if ( websocket ) {
     };
     websocket.onclose = function() {
       console.log('The websocket connection is now closed.');
-      generateStatus('5');
     };
   }
 
@@ -355,10 +411,11 @@ $('#selectAll').on('click', function() {  //on click
 
 
 
+
 setLoggedOffProperties(CurrentServer);
 
 
 
 console.log('Everything is ready.');
 
-//});
+});

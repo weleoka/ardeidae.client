@@ -1,3 +1,33 @@
+// Monitoring DOM for changes. Cant get the remove() to work though. Bugger.
+
+
+// select the target node
+var target = document.querySelector('#connectInputs');
+var insertedNodes = [];
+// create an observer instance
+var observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        var i;
+        console.log(mutation.type);
+        for ( i = 0; i < mutation.addedNodes.length; i++) {
+            insertedNodes.push(mutation.addedNodes[i]);
+        }
+    });
+    console.log(insertedNodes);
+});
+
+// configuration of the observer:
+var config = { attributes: true, childList: true, characterData: true };
+
+// pass in the target node, as well as the observer options
+observer.observe(target, config);
+
+        insertedNodes[0].remove();
+        console.log(insertedNodes);
+
+        
+
+
 
       // Get the Server details. Only same origin server.
 /*    $.ajax({
