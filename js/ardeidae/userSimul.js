@@ -1,4 +1,4 @@
-/*globals WebSocket, url */
+/*globals WebSocket */
 
 var botName,
       botID,
@@ -6,16 +6,13 @@ var botName,
       botWsSystem,
       botCounter = 0,
       numberOfBots = 5;
-var url2 = $('#serverUrl').prop('value');
 
-
-
-var createBot = function () {
+var createBot = function (url) {
     botID = botCounter;
     botName = 'Delta' + botID;
-    console.log( 'Connecting to: ' + url2 + ' With username: ' + botName);
-    botWebsocket = new WebSocket( url2, 'broadcast-protocol' );
-    botWsSystem = new WebSocket( url2, 'system-protocol' );
+    console.log( 'Connecting to: ' + url + ' With username: ' + botName);
+    botWebsocket = new WebSocket( url, 'broadcast-protocol' );
+    botWsSystem = new WebSocket( url, 'system-protocol' );
 
     console.log('Bot ' + botName + ', with ID ' + botID + ' is online.');
 

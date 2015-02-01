@@ -38,7 +38,7 @@
 			    <div id='connectbox'>
 
 			        	 <div id='serverSelectInfo'>
-			        	 <input id='serverUrl' class='textInputField' type="text" value='ws://dbwebb.se:1337'>
+			        	 <input id='serverUrl' class='textInputField' type="text" value='ws://'>
 			        	 <br>
 			            <select id="dropDown" class='smallButton'>
 			                <option value="default" selected>Select server</option>
@@ -109,7 +109,10 @@
 
 	</footer>
 
+
 <script src="js/jquery.min.js"></script>
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script> -->
+<!-- <script>window.jQuery || document.write('<script src="js/jquery-1.10.1.min.js"></script> IF jQuery did not load from the CDN -->
 
 <script src="js/ardeidae/ardeidaeVariables.js"</script>
 <script src="js/ardeidae/ardeidaeFunctions.js"></script>

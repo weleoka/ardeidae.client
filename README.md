@@ -9,7 +9,8 @@ v1.0.1
 v1.1.0
 v1.1.1
 v1.1.2
-v1.1.3 (current)
+v1.1.3
+v1.2.0 (current)
 
 Browser Support
 ---------------
@@ -65,7 +66,7 @@ Current Features of Ardeidae client:
 Known Issues/Missing Features:
 ------------------------------
 * Client side encryption of messages.
-* Dynamic server list and a way to notify what mode each chat server is running in.
+* Dynamic server list... requires independent ardeidae HUB.
 * Chat room support.
 * Switch on and off server logging of your messages.
 * A way to retrieve conversations to review historic message exchanges.

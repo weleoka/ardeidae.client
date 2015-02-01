@@ -1,6 +1,4 @@
-/*globals getHHMM, MsgControl, status:true, disconnect, connectArticle:true,
-messageArticle:true, outputDiv, posts, userCounterDiv:true, content, userDiv, url,
-Broadcast_protocol:true, Default_BCprotocol, System_protocol:true, Default_SYSprotocol */
+/*globals getHHMM, generateStatus */
 
     // main page elements.
     var connectArticle = $('#createConnection'),
@@ -10,16 +8,6 @@ Broadcast_protocol:true, Default_BCprotocol, System_protocol:true, Default_SYSpr
     var userCounterDiv = $('#userCounter'),
           userDiv = $('#userList'),
           userTable = $('#userTable');
-
-    // Input fields for not connected to server elements.
-
-
-
-    // Connected to server elements.
-   // var checkAll = $('#checkAll');
-    // var status = $('#status'),
-    //      disconnect = $('#disconnect');
-
 
 /**
  *  Set viewing properties for JS-enabled browser LOGGED OFF.
@@ -38,13 +26,11 @@ var setLoggedOffProperties = function (currentServer) {
     $('#checkAll').prop('checked', false);        // Uncheck private messaging checkbox.
     eMail.addClass('hidden');
     eMail.prop('value', null);
-    // $('#connectInputs#eMail').remove();
     // serverURL.disabled='disabled'; // Delete this part if you want the URL input box enabled
-
 
     // Settings depending on server meta data:
     if ( !currentServer ) {
-      // Reset to server selected defaults
+      // Reset to no selected server defaults
       $('#dropDown').prop('value', 'default');
       $('input#serverUrl').prop('value', 'ws://');
       // $('#dropDown').trigger('change');
@@ -53,22 +39,31 @@ var setLoggedOffProperties = function (currentServer) {
       $('#connectbuttonbox').addClass('hidden');
 
     } else if ( currentServer ) {
-      $('#connectInputs').removeClass('hidden');
-      $('#connectbuttonbox').removeClass('hidden');
+// Server did not respond to Ajax.
+      if ( currentServer === 'noServerInfo' ) {
+        generateStatus('7', 'Selected server not responding.');
+        $('#connectInputs').addClass('hidden');
+        $('#connectbuttonbox').addClass('hidden');
+// Server responded to ajax.
+      } else {
+        generateStatus('7', 'Recieved server status.');
+        $('#connectInputs').removeClass('hidden');
+        $('#connectbuttonbox').removeClass('hidden');
 
-      if ( currentServer.hasOwnProperty('privateMode') ) {
-
-        if ( currentServer.privateMode ) {
-          $('#connectButton').prop('value', 'privateConnect' );
-          $('#password').removeClass('hidden');
-          // $('#loginButton').removeClass('hidden');
-          $('#registerButton').removeClass('hidden');
-
-        } else {
-          $('#connectButton').prop('value', 'publicConnect');
-          $('#password').addClass('hidden');
-          // $('#loginButton').addClass('hidden');
-          $('#registerButton').addClass('hidden');
+        if ( currentServer.hasOwnProperty('privateMode') ) {
+// Server private mode: true.
+          if ( currentServer.privateMode ) {
+            $('#connectButton').prop('value', 'privateConnect' );
+            $('#password').removeClass('hidden');
+            // $('#loginButton').removeClass('hidden');
+            $('#registerButton').removeClass('hidden');
+// Server private mode: false.
+          } else {
+            $('#connectButton').prop('value', 'publicConnect');
+            $('#password').addClass('hidden');
+            // $('#loginButton').addClass('hidden');
+            $('#registerButton').addClass('hidden');
+          }
         }
       }
     }

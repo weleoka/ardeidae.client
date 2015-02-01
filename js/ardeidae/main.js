@@ -20,39 +20,54 @@ var websocket,
       wsLogin;
 
 
-/**
- *  Callback function to process CORS data
- */
-var processServerData = function (data) {
-      var dataa = JSON.parse(data);
-      setLoggedOffProperties(dataa);
-};
-
-
 
 /**
  *  Make an Anax request... CORS support enabled, browser compliance mode.
  */
 var createCorsRequest = function (method, url, callback) {
   // Change from ws:// to http:// in url.
-    var httpUrl = 'http://' + url.slice(5, url.length);
+  var httpUrl = 'http://' + url.slice(5, url.length);
 
-    $.ajax({
+  var ajaxReq = $.ajax({
       type: method,
       url: httpUrl,
+      timeout: 20000, // 20 seconds.
       contentType: 'application/json',
       data: JSON.stringify({
             name: 'clientName',
             age: 37
       }),
       dataType: 'text',
-      success: function(data){
-        callback(data);
+      dataFilter: function (data, type) {
+          if (type === 'text')
+          {
+              var parsed_data = JSON.parse(data);
+              return parsed_data;
+          }
       },
-      error: function(textStatus, errorThrown){ // jqXHR
-        console.log(textStatus);
-        console.log('Ajax request failed: ' + textStatus + ', ' + errorThrown);
-      }
+    });
+  /* Deprecation Notice:
+The jqXHR.success(), jqXHR.error(), and jqXHR.complete() callbacks are deprecated as of jQuery 1.8.
+To prepare your code for their eventual removal,
+use jqXHR.done(), jqXHR.fail(), and jqXHR.always() instead. */
+    ajaxReq.done (callback);
+    ajaxReq.fail (function(jqXHR, textStatus){ // jqXHR
+        if (jqXHR.status === 0) {
+            console.log('Not connected. Verify Network.');
+        } else if (jqXHR.status === 404) {
+            console.log('Requested page not found. [404]');
+        } else if (jqXHR.status === 500) {
+            console.log('Internal Server Error [500].');
+        } else if (textStatus === 'parsererror') {
+            console.log('Requested JSON parse failed.');
+        } else if (textStatus === 'timeout') {
+            console.log('Time out error.');
+        } else if (textStatus === 'abort') {
+            console.log('Ajax request aborted.');
+        } else {
+            console.log('Uncaught Error.n' + jqXHR.responseText);
+        }
+        callback('noServerInfo');
     });
 };
 
@@ -67,28 +82,31 @@ $('#dropDown').on('change', function() {
 // Update the textbox with the dropDown list url.
     $('input#serverUrl').prop('value', wsUrl);
 // This is to get server meta data.
-    createCorsRequest('POST', wsUrl, processServerData);
+    createCorsRequest('POST', wsUrl, setLoggedOffProperties);
 });
 
 
 // Make sure the user connects when hitting enter on adress, username or password field.
 $('body').on('keypress', 'input#serverUrl', function(event) {
     if (event.keyCode === 13) {
-      $('#connectionHandler').trigger('custom');
+      var url = $('input#serverUrl').prop('value');
+  // This is to get server meta data.
+      createCorsRequest('POST', url, setLoggedOffProperties);
       event.preventDefault();
     }
 });
 
 $('body').on('keypress', 'input#userName', function(event) {
     if (event.keyCode === 13) {
-      $('#connectionHandler').trigger('custom');
+      var connectionType = $('#connectButton').prop('value');
+      $.event.trigger( 'newConnection', connectionType );
       event.preventDefault();
     }
 });
 
 $('body').on('keypress', 'input#password', function(event) {
     if (event.keyCode === 13) {
-      $('#connectionHandler').trigger('custom');
+      $.event.trigger('newConnection', 'privateConnect');
       event.preventDefault();
     }
 });
@@ -96,15 +114,16 @@ $('body').on('keypress', 'input#password', function(event) {
 
 
 /**
- *  Add eventhandler to Register, login, and connect buttons
+ *  Add eventhandler to Register, and connect buttons
  */
 $('body').on('click', 'button#registerButton', function (event) {
-    $('#connectionHandler').trigger( 'custom', 'registerConnect' );
+    $.event.trigger( 'newConnection', 'registerConnect' );
     event.preventDefault();
 });
 
 $('body').on('click', 'button#connectButton', function (event) {
-    $('#connectionHandler').trigger( 'custom' );
+    var connectionType = $('#connectButton').prop('value');
+    $.event.trigger( 'newConnection', connectionType );
     event.preventDefault();
 });
 
@@ -114,8 +133,8 @@ $('body').on('click', 'button#connectButton', function (event) {
  *  Custom event handler to create the websocket connection.
  *  Also contains websocket callback functions onopen, onmessage, onclose.
  */
-$('#connectionHandler').on('custom', function ( event, arg1 ) {
-    if ( !arg1 ) { arg1 = $('#connectButton').prop('value'); }
+$(document).on('newConnection', function ( event, arg1 ) {
+    if ( !arg1 ) { arg1 = 'publicConnect'; }
     console.log('Connection controller argument is: ' + arg1);
     var url = $('input#serverUrl').prop('value');
     var userName = $('#userName').prop('value');
@@ -129,6 +148,7 @@ $('#connectionHandler').on('custom', function ( event, arg1 ) {
 // Take away eventhandlers from html elements.
     $('#send').off('click');
     $('#disconnect').off('click');
+    $('#botButton').off('click');
     // $('#registerConnect').off('click');
 
 // Check if websocket is already established, close if true.
@@ -222,16 +242,15 @@ if ( wsLogin ) {
         generateStatus('7', msg.message);
 
 // Trigger the connect handler as publicConnect now we have the protocols.
-        $('#connectionHandler').trigger('custom', 'publicConnect');
+        $.event.trigger('newConnection', 'publicConnect');
 
 // New user successfully inserted to db.
       } else if ( msg.lead === 'userSaved' ) {
-        // $('#password').prop('value', null);
-        $('input#eMail').remove(); // Trying to remove eMAil field from DOM after user created.... no luck
+        $('input#eMail').remove(); // remove eMail input DOM element.
         generateStatus('7', msg.message);
-        // $('#connectionHandler').trigger('custom', 'privateConnect');
+        // $('#connectionHandler').trigger('newConnection', 'privateConnect'); // Autologin after register???
 
-// Server general message.
+// Server custom message.
       } else {
         generateStatus('7', msg.message);
       }
@@ -355,20 +374,22 @@ $('#disconnect').on('click', function (event) {
   event.preventDefault();
 });
 
-
-  event.preventDefault();
-}); // Closing tags for CONNECT ON CLICK EVENTHANDLER.
-
-
-
 /**
  * Add eventhandler to BOT button
  */
 $('#botButton').on('click', function (event) {
   console.log('BOTTED');
-  createBot();
+  createBot(url);
   event.preventDefault();
 });
+
+
+  event.preventDefault();
+}); // Closing tags for newConnection EVENTHANDLER.
+
+
+
+
 
 
 /**
