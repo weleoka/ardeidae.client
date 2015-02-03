@@ -2,6 +2,8 @@
 WebSocket Messaging Client for Ardeidae messaging server.
 =================================================
 
+[Ardeidae homepage](http://www.student.bth.se/~kawe14/javascript/kmom10/webroot/index.php).
+
 Versions
 ---------------
 v1.0.0
@@ -73,6 +75,26 @@ Known Issues/Missing Features:
 * A way to retrieve conversations to review historic message exchanges.
 * Stop users sending blank messages.
 * Needs media queries for responsive design.
+
+
+
+
+Contributing
+------------
+
+If you'd like to contribute to Ardeidae's development, start by forking the GitHub repo:
+
+https://github.com/weleoka/ardeidae
+
+The best way to get your changes merged back on Gridless is as follows:
+
+1. Clone your fork
+2. Hack away
+3. If you are adding significant new functionality, document it in the README
+4. Do not change the version number, I will do that on my end
+5. Push the repo up to GitHub
+6. Send a pull request to [weleoka/ardeidae](https://github.com/weleoka/ardeidae)
+
 
 
 Licence
