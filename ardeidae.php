@@ -13,7 +13,7 @@
             <header>
                 <button id='disconnect'  class='exitButton'>X</button>
                 <div id='status'>no connection</div>
-                <h2 id='topbar'>Ardeidae Messenger</h2>
+                <h2 id='topbar'>Ardeidae Messenger v1.2</h2>
                 <h4>First seen 2015!</h4>
             </header>
 
@@ -33,7 +33,7 @@
 <p>Enjoy!</p>
                     		</div>
                         	<header>
-                                		<h1>HTML5 websockets</h1>
+                                		<h1>Get Connected</h1>
                        	 </header>
 			    <div id='connectbox'>
 

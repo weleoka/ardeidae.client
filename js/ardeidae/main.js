@@ -23,6 +23,10 @@ var websocket,
 
 /**
  *  Make an Anax request... CORS support enabled, browser compliance mode.
+ *  Deprecation Notice:
+ *  The jqXHR.success(), jqXHR.error(), and jqXHR.complete() callbacks are deprecated as of jQuery 1.8.
+ *  To prepare your code for their eventual removal,
+ *  use jqXHR.done(), jqXHR.fail(), and jqXHR.always() instead.
  */
 var createCorsRequest = function (method, url, callback) {
   // Change from ws:// to http:// in url.
@@ -46,10 +50,7 @@ var createCorsRequest = function (method, url, callback) {
           }
       },
     });
-  /* Deprecation Notice:
-The jqXHR.success(), jqXHR.error(), and jqXHR.complete() callbacks are deprecated as of jQuery 1.8.
-To prepare your code for their eventual removal,
-use jqXHR.done(), jqXHR.fail(), and jqXHR.always() instead. */
+
     ajaxReq.done (callback);
     ajaxReq.fail (function(jqXHR, textStatus){ // jqXHR
         if (jqXHR.status === 0) {
@@ -374,6 +375,8 @@ $('#disconnect').on('click', function (event) {
   event.preventDefault();
 });
 
+
+
 /**
  * Add eventhandler to BOT button
  */
@@ -384,16 +387,14 @@ $('#botButton').on('click', function (event) {
 });
 
 
+
   event.preventDefault();
 }); // Closing tags for newConnection EVENTHANDLER.
 
 
 
-
-
-
 /**
- * Add eventhandler to stylesheet button
+ *  Add eventhandler to stylesheet button
  */
 $('#stylesheetButton').on('click', function (event) {
   var current = $('#activeCss').prop('href');
@@ -405,9 +406,12 @@ $('#stylesheetButton').on('click', function (event) {
   }
   event.preventDefault();
 });
+
+
+
 /**
- * Add eventhandler to message input field to trigger send button on enter,
- * or newline break if shift + enter.
+ *  Add eventhandler to message input field to trigger send button on enter,
+ *  or newline break if shift + enter.
  */
 $('#message').on('keypress', function(event) {
     if (event.keyCode === 13 && !event.shiftKey) {
@@ -418,6 +422,9 @@ $('#message').on('keypress', function(event) {
 
 
 
+/**
+ *  Add eventhandler to private message checkpox select all.
+ */
 $('#selectAll').on('click', function() {  //on click
     if ($(this).prop('checked') ) { // check select status
         $('.checkboxes').each(function() { //loop through each checkbox
@@ -430,12 +437,7 @@ $('#selectAll').on('click', function() {  //on click
     }
 });
 
-
-
-
 setLoggedOffProperties(CurrentServer);
-
-
 
 console.log('Everything is ready.');
 

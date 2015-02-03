@@ -1,13 +1,15 @@
 /*globals getHHMM, generateStatus */
 
-    // main page elements.
-    var connectArticle = $('#createConnection'),
-          messageArticle = $('#createMessage');
+// main page elements.
+var connectArticle = $('#createConnection'),
+      messageArticle = $('#createMessage');
 
-   // User information divs.
-    var userCounterDiv = $('#userCounter'),
-          userDiv = $('#userList'),
-          userTable = $('#userTable');
+// User information divs.
+var userCounterDiv = $('#userCounter'),
+      userDiv = $('#userList'),
+      userTable = $('#userTable');
+
+
 
 /**
  *  Set viewing properties for JS-enabled browser LOGGED OFF.
@@ -69,6 +71,7 @@ var setLoggedOffProperties = function (currentServer) {
     }
 
 };
+
 
 
 /**
