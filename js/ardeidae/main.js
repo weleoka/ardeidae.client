@@ -32,27 +32,36 @@ var createCorsRequest = function (method, url, callback) {
   // Change from ws:// to http:// in url.
   var httpUrl = 'http://' + url.slice(5, url.length);
 
-  var ajaxReq = $.ajax({
+  $.ajax({
       type: method,
       url: httpUrl,
       timeout: 20000, // 20 seconds.
       contentType: 'application/json',
-      data: JSON.stringify({
-            name: 'clientName',
-            age: 37
-      }),
+      data: JSON.stringify({ nothing: 'nothing'}),
       dataType: 'text',
       dataFilter: function (data, type) {
-          if (type === 'text')
+          if ( type === 'text' )
           {
-              var parsed_data = JSON.parse(data);
-              return parsed_data;
+              var i;
+              var json_array = data.split('","');
+              var parsed_array = [];
+
+              console.log(json_array);
+              for ( i = 0; i < json_array.length; i++ ) {
+                parsed_array.push( JSON.parse(json_array[i]) );
+              }
+              //var parsed_data = JSON.parse(data);
+
+              console.log("sssssssssssssssssssssssssssssssssssss" +  parsed_array);
+
+              return parsed_array;
           }
       },
-    });
-
-    ajaxReq.done (callback);
-    ajaxReq.fail (function(jqXHR, textStatus){ // jqXHR
+      success: function (data, text, jqXHR) {
+        console.log(text + jqXHR);
+          callback (data);
+      },
+      error: function(jqXHR, textStatus) { // jqXHR
         if (jqXHR.status === 0) {
             console.log('Not connected. Verify Network.');
         } else if (jqXHR.status === 404) {
@@ -69,7 +78,9 @@ var createCorsRequest = function (method, url, callback) {
             console.log('Uncaught Error.n' + jqXHR.responseText);
         }
         callback('noServerInfo');
-    });
+    },
+  });
+
 };
 
 
@@ -83,7 +94,7 @@ $('#dropDown').on('change', function() {
 // Update the textbox with the dropDown list url.
     $('input#serverUrl').prop('value', wsUrl);
 // This is to get server meta data.
-    createCorsRequest('POST', wsUrl, setLoggedOffProperties);
+    createCorsRequest('GET', wsUrl, setLoggedOffProperties);
 });
 
 
@@ -92,7 +103,7 @@ $('body').on('keypress', 'input#serverUrl', function(event) {
     if (event.keyCode === 13) {
       var url = $('input#serverUrl').prop('value');
   // This is to get server meta data.
-      createCorsRequest('POST', url, setLoggedOffProperties);
+      createCorsRequest('GET', url, setLoggedOffProperties);
       event.preventDefault();
     }
 });

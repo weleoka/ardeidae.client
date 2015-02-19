@@ -1,58 +1,40 @@
-
 WebSocket Messaging Client for Ardeidae messaging server.
-=================================================
 
 [Ardeidae homepage](http://www.student.bth.se/~kawe14/javascript/kmom10/webroot/index.php).
 
-Versions
----------------
-v1.0.0
-v1.0.1
-v1.1.0
-v1.1.1
-v1.1.2
-v1.1.3
-v1.2.0
-v1.2.1 (current)
+### Version
+v1.2.2 (current)
+v2.0.0
 
-Browser Support
----------------
+
+### Browser Support
 Requires Javascript and enabled websockets in the browser.
 
 
-Overview
---------
+### Overview
 This is a simple client for linking up to a Ardeidae chat server. It's made using JQuery.
 
 
-
-Documentation
-=============
-
+## Documentation
 This client for the Ardeidae chat server comes with all login functionality and user signup, multiple styles, easy server select, private messaging and more.
 
 
-
-
-Installation
-------------
-
+### Installation
 The client is HTML and Javascript. Host on any HTTP server and navigate to there with a websocket & javascript enabled browser to use it. Choose a server from the dropdown list.
 
 
 Ardeidae personal chat server for node.js:
 If you want to run your own server it can be found at:
 
-    https://github.com/weleoka/ardeidae.git
-
+'''
+https://github.com/weleoka/ardeidae.git
+'''
 Or by Node Package Manager:
+'''
+$ npm install ardeidae
+'''
 
-    $ npm install ardeidae
-
-
-
-Current Features of Ardeidae client:
------------------
+### Current Features of Ardeidae client:
 * After selecting a server the client makes a request to the server and adapts GUI depending on what the servers responds. If the server is in public or private mode the password field will be visible or not. The same for registering new user. The request is made using ajax and is set up to enable CORS.
 * Maintain linebreaks in messages (alt + enter).
 * Quick posting and login, accepts keyboard navigation.
@@ -65,23 +47,26 @@ Current Features of Ardeidae client:
 * Bots to test functionality... add them on the BotButton... only for open server mode.
 
 
-
-Known Issues/Missing Features:
-------------------------------
-* Client side encryption of messages.
+### Known Issues/Missing Features:
+Functionality:
 * Dynamic server list... requires independent ardeidae HUB.
 * Chat room support.
+* Needs media queries for responsive design.
+* Stop users sending blank messages.
 * Switch on and off server logging of your messages.
 * A way to retrieve conversations to review historic message exchanges.
-* Stop users sending blank messages.
-* Needs media queries for responsive design.
+
+Specs and options:
+* not formulated.
+
+Security:
+* Client side encryption of messages.
+
+Code and style:
+* Jquery .ajax object should use dataType: json and leave out dataFilter method to return parsed string.
 
 
-
-
-Contributing
-------------
-
+## Contributing
 If you'd like to contribute to Ardeidae's development, start by forking the GitHub repo:
 
 https://github.com/weleoka/ardeidae
@@ -96,8 +81,5 @@ The best way to get your changes merged back on Gridless is as follows:
 6. Send a pull request to [weleoka/ardeidae](https://github.com/weleoka/ardeidae)
 
 
-
-Licence
-==============
-
+## Licence
 Creative Commons Share-Alike v4.0

@@ -14,8 +14,10 @@ var userCounterDiv = $('#userCounter'),
 /**
  *  Set viewing properties for JS-enabled browser LOGGED OFF.
  */
-var setLoggedOffProperties = function (currentServer) {
+var setLoggedOffProperties = function (serverList) {
     var eMail = $('eMail');
+    var currentServer = null;
+
 
     $('#status').html('No connection.');
     messageArticle.addClass('hidden');
@@ -29,9 +31,24 @@ var setLoggedOffProperties = function (currentServer) {
     eMail.addClass('hidden');
     eMail.prop('value', null);
     // serverURL.disabled='disabled'; // Delete this part if you want the URL input box enabled
+    console.log(serverList);
+
+    if ( serverList ) {
+      if ( serverList.hasOwnProperty('length') ) {
+        if ( serverList.length === 1 ) {
+          console.log('SERVERLIST LENGTH 1');
+          currentServer = serverList[0];
+        }
+        if ( serverList.length > 1 ) {
+          currentServer = null;
+          console.log('SERVERLIST LONGER THAN 1' + serverList.length);
+        }
+      }
+    }
 
     // Settings depending on server meta data:
     if ( !currentServer ) {
+      console.log("CURENT SERVER IS NOT SET!!!");
       // Reset to no selected server defaults
       $('#dropDown').prop('value', 'default');
       $('input#serverUrl').prop('value', 'ws://');
@@ -69,6 +86,7 @@ var setLoggedOffProperties = function (currentServer) {
         }
       }
     }
+
 
 };
 
@@ -131,5 +149,3 @@ var generateStatus = function(type, custom) {
   outputDiv.append(output_user);
   outputDiv.scrollTop(output_user.offsetTop);
 };
-
-
