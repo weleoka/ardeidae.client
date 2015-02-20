@@ -10,13 +10,11 @@ var userCounterDiv = $('#userCounter'),
       userTable = $('#userTable');
 
 
-
 /**
  *  Set viewing properties for JS-enabled browser LOGGED OFF.
  */
 var setLoggedOffProperties = function (serverList) {
     var eMail = $('eMail');
-    var currentServer = null;
 
 
     $('#status').html('No connection.');
@@ -31,21 +29,55 @@ var setLoggedOffProperties = function (serverList) {
     eMail.addClass('hidden');
     eMail.prop('value', null);
     // serverURL.disabled='disabled'; // Delete this part if you want the URL input box enabled
-    console.log(serverList);
+    // console.log(serverList);
 
     if ( serverList ) {
       if ( serverList.hasOwnProperty('length') ) {
         if ( serverList.length === 1 ) {
-          console.log('SERVERLIST LENGTH 1');
-          currentServer = serverList[0];
+          generateStatus('7', 'Recieved server status.');
+          setSelectedServer(serverList[0]);
         }
         if ( serverList.length > 1 ) {
-          currentServer = null;
-          console.log('SERVERLIST LONGER THAN 1' + serverList.length);
+          generateStatus('7', 'Refreshed server list.');
+          populateServerList(serverList);
         }
       }
     }
+};
 
+var oddChecker = function (count) {
+      if ( count % 2 !== 0 ) {
+          return 'serverItem odd';
+      }
+      return 'serverItem';
+};
+/**
+ *  Display all the servers online from the hub.
+ */
+var populateServerList = function (list) {
+    var i, counter = 0;
+    var hubListTable = $('#hubListTable');
+
+    hubListTable.html(' ');
+
+    for ( i = 0; i < list.length; i++ ) {
+      counter++;
+
+      $('<div/>', {
+          class: oddChecker(counter),
+          value: 'ws://' + list[i].domain,
+          text: '',
+      }).html('<h4>' + list[i].name + '</h4> uptime: ' + (list[i].uptime / 1000 )+ '</p>')
+          .appendTo('#hubListTable');
+    }
+};
+
+
+
+/**
+ *  Set a client to specific server.
+ */
+var setSelectedServer = function (currentServer) {
     // Settings depending on server meta data:
     if ( !currentServer ) {
       console.log("CURENT SERVER IS NOT SET!!!");
@@ -65,7 +97,6 @@ var setLoggedOffProperties = function (serverList) {
         $('#connectbuttonbox').addClass('hidden');
 // Server responded to ajax.
       } else {
-        generateStatus('7', 'Recieved server status.');
         $('#connectInputs').removeClass('hidden');
         $('#connectbuttonbox').removeClass('hidden');
 

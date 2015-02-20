@@ -45,6 +45,13 @@ h3 {
     color: #292929;
 }
 h4 {
+    font-size: 16px;
+    margin: 0em;
+    margin-bottom: 0.5em;
+    text-align: left;
+    color: #292929;
+}
+ribbon {
     color: #F47D31;
     background-color: #fff;
     -webkit-box-shadow: 2px 2px 20px #888;
@@ -175,6 +182,18 @@ a:hover {
     overflow-y: none;
     overflow-x: none;
     margin-bottom: 1em;
+}
+#hubList {
+    height: 310px;
+    overflow-x: none;
+    overflow-y: auto;
+    margin-bottom: 1em;
+}
+#refreshButton {
+    float: right;
+}
+#hubListTable {
+    clear: both;
 }
 #posts {
     height: 310px;

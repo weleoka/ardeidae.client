@@ -14,7 +14,7 @@
                 <button id='disconnect'  class='exitButton'>X</button>
                 <div id='status'>no connection</div>
                 <h2 id='topbar'>Ardeidae Messenger v1.2</h2>
-                <h4>First seen 2015!</h4>
+                <ribbon>First seen 2015!</ribbon>
             </header>
 
 	            <nav>
@@ -25,29 +25,21 @@
 
     	<section>
                             <article id='createConnection' class='mainPageContainer'>
+                            	<button id='refreshButton' class='smallButton'>Refresh</button>
                             	<div id='welcome'>
-<h3>Welcome Ardeidae, a chat-client using websockets</h3>
-<p>This is a simple chat service using websockets.</p>
-<p>There are different servers to choose from. You can also very easily start your own Ardeidae server. You will just need a web server and node.js installed first!</p>
-<p>So with Ardeidae you can have a private chat circle on your local area network, or connect to one of the public or private servers online.</p>
-<p>Enjoy!</p>
+                            	Gobboldygook.
+                    		</div>
+                    		<div id='hubList' class="hidden">
+                    			<div id="hubListTable">
+                    			</div>
                     		</div>
                         	<header>
                                 		<h1>Get Connected</h1>
-                       	 </header>
+                       	</header>
 			    <div id='connectbox'>
-
+			    <div id="serverDA"></div>
 			        	 <div id='serverSelectInfo'>
 			        	 <input id='serverUrl' class='textInputField' type="text" value='ws://'>
-			        	 <br>
-			            <select id="dropDown" class='smallButton'>
-			                <option value="default" selected>Select server</option>
-			                <option value="ws://dbwebb.se:1337">MosWsServer</option>
-			                <option value="ws://127.0.0.1:8120">Localhost</option>
-			                <option value="ws://192.168.1.36:8120">LAN</option>
-			                <option value="ws://nodejs2.student.bth.se:8120">BTH2</option>
-			                <option value="ws://nodejs1.student.bth.se:8120">BTH1</option>
-			            </select>
 			            </div>
 			            <div id='connectInputs'>
 				            <input id='userName' class='textInputField' type="text" placeholder="username"><br>

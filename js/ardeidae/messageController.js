@@ -71,9 +71,8 @@ MessageController.prototype = {
       if (this.msgCount % 2 !== 0) {
           newPost.className = 'odd';
       }
+      // For example private messages.
       if ( msg.attributes ) {
-        // var newPostClass = msg.attributes;
-        // element.className += " " + newClassName;
         newPost.className += ' ' + msg.attributes;
       }
       newPost.innerHTML = getHHMM() + ' ' + msg.name + ': ' + nl2br(msg.message);

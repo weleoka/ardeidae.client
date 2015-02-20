@@ -42,23 +42,11 @@ var createCorsRequest = function (method, url, callback) {
       dataFilter: function (data, type) {
           if ( type === 'text' )
           {
-              var i;
-              var json_array = data.split('","');
-              var parsed_array = [];
-
-              console.log(json_array);
-              for ( i = 0; i < json_array.length; i++ ) {
-                parsed_array.push( JSON.parse(json_array[i]) );
-              }
-              //var parsed_data = JSON.parse(data);
-
-              console.log("sssssssssssssssssssssssssssssssssssss" +  parsed_array);
-
-              return parsed_array;
+              var data_parsed = JSON.parse(data);
+              return data_parsed;
           }
       },
-      success: function (data, text, jqXHR) {
-        console.log(text + jqXHR);
+      success: function (data) {
           callback (data);
       },
       error: function(jqXHR, textStatus) { // jqXHR
@@ -86,9 +74,17 @@ var createCorsRequest = function (method, url, callback) {
 
 
 /**
- *  Add eventhandler to server select dropdown list and connection properties.
+ *  Add eventhandler to server refresh button and hubList.
  */
-$('#dropDown').on('change', function() {
+ $('#refreshButton').on('click', function() {
+    createCorsRequest('GET', 'ws://localhost:8121', setLoggedOffProperties);
+    $('#welcome').addClass('hidden');
+    $('#hubList').removeClass('hidden');
+});
+
+$('body').on('click', '.serverItem', function() {
+  console.log("clicked on a serverItem");
+  console.log($(this).prop('value')); // undefined.
     ArdeiVars.resetProtocols();
     var wsUrl = $(this).prop('value');
 // Update the textbox with the dropDown list url.
