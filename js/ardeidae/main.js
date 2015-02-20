@@ -7,7 +7,7 @@ MutationObserver */
 /**
  *  Place your JS-code here.
  */
- $(document).ready( function () {
+ //$(document).ready( function () {
  'use strict';
 
 var MsgControl = new MessageController();
@@ -50,22 +50,30 @@ var createCorsRequest = function (method, url, callback) {
           callback (data);
       },
       error: function(jqXHR, textStatus) { // jqXHR
+        var humanReadable;
         if (jqXHR.status === 0) {
-            console.log('Not connected. Verify Network.');
+            humanReadable = 'Not connected. Verify Network.';
+            console.log(humanReadable);
         } else if (jqXHR.status === 404) {
-            console.log('Requested page not found. [404]');
+            humanReadable = 'Requested page not found. [404]';
+            console.log(humanReadable);
         } else if (jqXHR.status === 500) {
-            console.log('Internal Server Error [500].');
+            humanReadable = 'Internal Server Error [500].';
+            console.log(humanReadable);
         } else if (textStatus === 'parsererror') {
-            console.log('Requested JSON parse failed.');
+            humanReadable = 'Requested JSON parse failed.';
+            console.log(humanReadable);
         } else if (textStatus === 'timeout') {
-            console.log('Time out error.');
+            humanReadable = 'Time out error.';
+            console.log(humanReadable);
         } else if (textStatus === 'abort') {
-            console.log('Ajax request aborted.');
+            humanReadable = 'Ajax request aborted.';
+            console.log(humanReadable);
         } else {
-            console.log('Uncaught Error.n' + jqXHR.responseText);
+            humanReadable = 'Uncaught Error.n' + jqXHR.responseText;
+            console.log(humanReadable);
         }
-        callback('noServerInfo');
+        callback(humanReadable);
     },
   });
 
@@ -74,36 +82,57 @@ var createCorsRequest = function (method, url, callback) {
 
 
 /**
- *  Add eventhandler to server refresh button and hubList.
+ *  Eventhandler for the url field. Triggered by enter and from clicking server listItem.
  */
- $('#refreshButton').on('click', function() {
-    createCorsRequest('GET', 'ws://localhost:8121', setLoggedOffProperties);
-    $('#welcome').addClass('hidden');
-    $('#hubList').removeClass('hidden');
-});
-
-$('body').on('click', '.serverItem', function() {
-  console.log("clicked on a serverItem");
-  console.log($(this).prop('value')); // undefined.
-    ArdeiVars.resetProtocols();
-    var wsUrl = $(this).prop('value');
-// Update the textbox with the dropDown list url.
-    $('input#serverUrl').prop('value', wsUrl);
+ var handler_selectAServer = function( event ) {
+ if (event.keyCode === 13) {
+    var url = $('input#serverUrl').prop('value');
 // This is to get server meta data.
-    createCorsRequest('GET', wsUrl, setLoggedOffProperties);
-});
-
-
-// Make sure the user connects when hitting enter on adress, username or password field.
-$('body').on('keypress', 'input#serverUrl', function(event) {
-    if (event.keyCode === 13) {
-      var url = $('input#serverUrl').prop('value');
-  // This is to get server meta data.
-      createCorsRequest('GET', url, setLoggedOffProperties);
+    createCorsRequest( 'GET', url, setLoggedOffProperties );
+    if ( event.hasOwnProperty('preventDefault') ) {
       event.preventDefault();
     }
+  }
+};
+
+
+
+/**
+ *  Eventhandler for serverListItem. Bound in populateServerList(), triggered by click.
+ */
+var handler_clickServerListItem = function (event) {
+    console.log("clicked on a serverItem");
+    var retrieved = event.target.getAttribute('data_server'); // $(this).prop('data_server');
+
+    // Update the textbox with the selected server url.
+    $('input#serverUrl').prop('value', retrieved);
+
+    // Triggering an event handler the right way
+    var rocker = {keyCode: 13}; // simulate the keycode 13.
+    handler_selectAServer(rocker); // instead of $( "input#serverUrl" ).trigger( "keypress" )
+};
+
+
+
+/**
+ *  Eventhandler for server refresh button and hubList.
+ */
+ $('#refreshButton').on('click', function() {
+    createCorsRequest( 'GET', 'ws://localhost:8121', setLoggedOffProperties );
+    $('#welcome').addClass('hidden');
+    $('#hubList').removeClass('hidden');
+    ArdeiVars.resetProtocols();
+    // setEventhandlers();
 });
 
+
+// Hitting enter on address field.
+$('body').on('keypress', 'input#serverUrl', handler_selectAServer);
+
+
+/**
+ *  Eventhandlers so user connects when hitting enter on username or password field.
+ */
 $('body').on('keypress', 'input#userName', function(event) {
     if (event.keyCode === 13) {
       var connectionType = $('#connectButton').prop('value');
@@ -111,7 +140,6 @@ $('body').on('keypress', 'input#userName', function(event) {
       event.preventDefault();
     }
 });
-
 $('body').on('keypress', 'input#password', function(event) {
     if (event.keyCode === 13) {
       $.event.trigger('newConnection', 'privateConnect');
@@ -448,4 +476,4 @@ setLoggedOffProperties(CurrentServer);
 
 console.log('Everything is ready.');
 
-});
+//});

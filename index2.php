@@ -13,7 +13,7 @@
             <header>
                 <button id='disconnect'  class='exitButton'>X</button>
                 <div id='status'>no connection</div>
-                <h2 id='topbar'>Ardeidae Messenger v1.2</h2>
+                <h2 id='topbar'>Ardeidae Messenger v2.0</h2>
                 <ribbon>First seen 2015!</ribbon>
             </header>
 
@@ -81,6 +81,7 @@
 	<aside>
 		<div id='sidecolumn'>
                                   <div id='userCounter'></div>
+                                  <div id='serverMetaData'></div>
             		<div id='userList'>
     				<table id="userTable">
     					<thead>

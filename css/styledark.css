@@ -280,6 +280,7 @@ a:hover {
 #hubListTable {
     clear: both;
 }
+
 #posts {
     height: 310px;
     overflow-y: auto;
@@ -404,7 +405,11 @@ a:hover {
 }
 
 
-
+#serverMetaData {
+    width: 100%;
+    height: 310px;
+    overflow-y: none;
+}
 #userCounter{
     height: 20px;
     padding-top: 0px;

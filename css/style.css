@@ -50,6 +50,7 @@ h4 {
     margin-bottom: 0.5em;
     text-align: left;
     color: #292929;
+    background-color: inherit;
 }
 ribbon {
     color: #F47D31;
@@ -155,6 +156,7 @@ a {
 a:hover {
     text-decoration: underline;
 }
+p {background-color: inherit;}
 
 
 
@@ -189,6 +191,17 @@ a:hover {
     overflow-y: auto;
     margin-bottom: 1em;
 }
+
+.serverItem {
+    cursor: pointer;
+    background-color:#EAE0A9;
+    border: 1px dashed brown;
+}
+.serverItem:hover{
+    background-color: brown;
+}
+
+
 #refreshButton {
     float: right;
 }
@@ -320,7 +333,11 @@ a:hover {
     clear: both;
 }
 
-
+#serverMetaData {
+    width: 100%;
+    height: 310px;
+    overflow-y: none;
+}
 
 #userCounter {
     height: 20px;

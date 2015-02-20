@@ -3,8 +3,7 @@ WebSocket Messaging Client for Ardeidae messaging server.
 [Ardeidae homepage](http://www.student.bth.se/~kawe14/javascript/kmom10/webroot/index.php).
 
 ### Version
-v1.2.2 (current)
-v2.0.0
+v2.0.0 (current)
 
 
 ### Browser Support
