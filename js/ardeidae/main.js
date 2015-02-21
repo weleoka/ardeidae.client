@@ -35,7 +35,7 @@ var createCorsRequest = function (method, url, callback) {
   $.ajax({
       type: method,
       url: httpUrl,
-      timeout: 20000, // 20 seconds.
+      timeout: 10000, // 10 seconds.
       contentType: 'application/json',
       data: JSON.stringify({ nothing: 'nothing'}),
       dataType: 'text',
@@ -87,7 +87,9 @@ var createCorsRequest = function (method, url, callback) {
  var handler_selectAServer = function( event ) {
  if (event.keyCode === 13) {
     var url = $('input#serverUrl').prop('value');
+    var serverDomainUrl = url.slice(5, url.length).split(':');
 // This is to get server meta data.
+    generateStatus('7', 'waiting for server at ' + serverDomainUrl[0]);
     createCorsRequest( 'GET', url, setLoggedOffProperties );
     if ( event.hasOwnProperty('preventDefault') ) {
       event.preventDefault();

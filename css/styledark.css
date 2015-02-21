@@ -268,18 +268,35 @@ a:hover {
     overflow-x: none;
     margin-bottom: 1em;
 }
+
+
+
 #hubList {
     height: 310px;
     overflow-x: none;
     overflow-y: auto;
     margin-bottom: 1em;
 }
+.serverItem {
+    cursor: pointer;
+    background-color: #222222;
+    // border: 1px dashed #222222;
+    padding: 0.5em;
+}
+.serverItem:hover{
+    background-color: #443D3D;
+}
+
+
 #refreshButton {
     float: right;
 }
 #hubListTable {
     clear: both;
 }
+
+
+
 
 #posts {
     height: 310px;

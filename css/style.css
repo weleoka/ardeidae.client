@@ -185,20 +185,23 @@ p {background-color: inherit;}
     overflow-x: none;
     margin-bottom: 1em;
 }
+
+
+
 #hubList {
     height: 310px;
     overflow-x: none;
     overflow-y: auto;
     margin-bottom: 1em;
 }
-
 .serverItem {
     cursor: pointer;
     background-color:#EAE0A9;
-    border: 1px dashed brown;
+    // border-bottom: 1px solid #CCC1BB;
+    padding: 0.5em;
 }
 .serverItem:hover{
-    background-color: brown;
+    background-color: #F4E5A1;
 }
 
 
@@ -208,6 +211,9 @@ p {background-color: inherit;}
 #hubListTable {
     clear: both;
 }
+
+
+
 #posts {
     height: 310px;
     overflow-y: auto;

@@ -27,10 +27,15 @@
                             <article id='createConnection' class='mainPageContainer'>
                             	<button id='refreshButton' class='smallButton'>Refresh</button>
                             	<div id='welcome'>
-                            	Gobboldygook.
+<h3>Welcome Ardeidae, a chat-client using websockets</h3>
+<p>This is a simple chat service using websockets.</p>
+<p>There are different servers to choose from. You can also very easily start your own Ardeidae server. You will just need a web server and node.js installed first!</p>
+<p>So with Ardeidae you can have a private chat circle on your local area network, or connect to one of the public or private servers online.</p>
+<p>Enjoy!</p>
                     		</div>
                     		<div id='hubList' class="hidden">
                     			<div id="hubListTable">
+                    			Searching for active servers on Ardeidae hub... problem with connection.
                     			</div>
                     		</div>
                         	<header>
