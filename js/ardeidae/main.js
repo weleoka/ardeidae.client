@@ -119,8 +119,22 @@ var handler_clickServerListItem = function (event) {
 /**
  *  Eventhandler for server refresh button and hubList.
  */
- $('#refreshButton').on('click', function() {
+ $('#refreshButton0').on('click', function() {
     createCorsRequest( 'GET', 'ws://localhost:8121', setLoggedOffProperties );
+    $('#welcome').addClass('hidden');
+    $('#hubList').removeClass('hidden');
+    ArdeiVars.resetProtocols();
+    // setEventhandlers();
+});
+$('#refreshButton1').on('click', function() {
+    createCorsRequest( 'GET', 'ws://nodejs1.student.bth.se:8121', setLoggedOffProperties );
+    $('#welcome').addClass('hidden');
+    $('#hubList').removeClass('hidden');
+    ArdeiVars.resetProtocols();
+    // setEventhandlers();
+});
+$('#refreshButton2').on('click', function() {
+    createCorsRequest( 'GET', 'ws://nodejs2.student.bth.se:8121', setLoggedOffProperties );
     $('#welcome').addClass('hidden');
     $('#hubList').removeClass('hidden');
     ArdeiVars.resetProtocols();

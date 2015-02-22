@@ -25,7 +25,9 @@
 
     	<section>
                             <article id='createConnection' class='mainPageContainer'>
-                            	<button id='refreshButton' class='smallButton'>Refresh</button>
+                            	<button id='refreshButton0' class='smallButton'>Refresh</button>
+                            	<button id='refreshButton1' class='smallButton'>Refresh</button>
+                            	<button id='refreshButton2' class='smallButton'>Refresh</button>
                             	<div id='welcome'>
 <h3>Welcome Ardeidae, a chat-client using websockets</h3>
 <p>This is a simple chat service using websockets.</p>
@@ -35,7 +37,7 @@
                     		</div>
                     		<div id='hubList' class="hidden">
                     			<div id="hubListTable">
-                    			Searching for active servers on Ardeidae hub... problem with connection.
+                    			Searching for active servers on Ardeidae hub... <br> problem with connection.
                     			</div>
                     		</div>
                         	<header>
