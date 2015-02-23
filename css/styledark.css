@@ -263,7 +263,7 @@ a:hover {
     border: 1px solid #5A99BA;
 }
 #welcome {
-    height: 310px;
+    height: 290px;
     overflow-y: none;
     overflow-x: none;
     margin-bottom: 1em;
@@ -288,7 +288,13 @@ a:hover {
 }
 
 
-#refreshButton {
+#refreshButton0 {
+    float: right;
+}
+#refreshButton1 {
+    float: right;
+}
+#refreshButton2 {
     float: right;
 }
 #hubListTable {

@@ -89,7 +89,7 @@ var createCorsRequest = function (method, url, callback) {
     var url = $('input#serverUrl').prop('value');
     var serverDomainUrl = url.slice(5, url.length).split(':');
 // This is to get server meta data.
-    generateStatus('7', 'waiting for server at ' + serverDomainUrl[0]);
+    generateStatus('7', 'waiting for server at ' + serverDomainUrl[0] + '<br>timeout is: 10sec.');
     createCorsRequest( 'GET', url, setLoggedOffProperties );
     if ( event.hasOwnProperty('preventDefault') ) {
       event.preventDefault();

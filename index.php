@@ -25,9 +25,9 @@
 
     	<section>
                             <article id='createConnection' class='mainPageContainer'>
-                            	<button id='refreshButton0' class='smallButton'>Refresh</button>
-                            	<button id='refreshButton1' class='smallButton'>Refresh</button>
-                            	<button id='refreshButton2' class='smallButton'>Refresh</button>
+                            	<button id='refreshButton0' class='smallButton'>Localhost</button>
+                            	<button id='refreshButton1' class='smallButton'>nodejs1</button>
+                            	<button id='refreshButton2' class='smallButton'>nodejs2</button>
                             	<div id='welcome'>
 <h3>Welcome Ardeidae, a chat-client using websockets</h3>
 <p>This is a simple chat service using websockets.</p>
