@@ -3,7 +3,7 @@ ErrorDocument 404 /404.php
 # ErrorDocument 404 "This is a Anax 404. Document is not here."
 
 
-<filesMatch "\.(html|htm|js|css)$">
+<filesMatch "\.(html|htm|js|css|php)$">
 FileETag None
 <ifModule mod_headers.c>
 Header unset ETag

@@ -111,20 +111,20 @@
 		<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script> -->
 		<!-- <script>window.jQuery || document.write('<script src="js/jquery-1.10.1.min.js"></script>'); IF jQuery did not load from the CDN -->
 
-		<!-- <script src="js/ardeidae/variables.js"></script> -->
+		<script src="js/ardeidae/variables.js"></script>
 
-		<!-- <script src="js/ardeidae/functions.js"></script> -->
+		<script src="js/ardeidae/functions.js"></script>
 
-		<!-- <script src="js/ardeidae/messageController.js"></script> -->
+		<script src="js/ardeidae/messageController.js"></script>
 
-		<!-- <script src="js/ardeidae/viewFeedback.js"></script> -->
+		<script src="js/ardeidae/viewFeedback.js"></script>
 
-		<!-- <script src="js/ardeidae/userSimul.js"></script> -->
+		<script src="js/ardeidae/userSimul.js"></script>
 
-		<!-- <script src="js/ardeidae/main.js"></script> -->
+		<script src="js/ardeidae/main.js"></script>
 
 
-		<script src="js/ardeidae/ardeiCli.js"</script>
+		<!-- Compiled file <script src="js/ardeidae/ardeiCli.js"</script> -->
 
 
 	</footer>

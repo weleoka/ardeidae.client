@@ -490,4 +490,4 @@ console.log('Everything is ready.');
 
 
 // closing tag from document.ready function.
-});
+// });
