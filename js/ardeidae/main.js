@@ -1,14 +1,8 @@
-/*globals WebSocket, MsgControl, VariablesController, FunctionController, MessageController, ConnectionController,
-websocket: true, wsSystem: true, wsLogin: true, createBot,
+/*globals WebSocket,
+MsgControl, VariablesController, FunctionController, MessageController, ConnectionController,
+websocket: true, wsSystem: true, wsLogin: true,
 generateStatus, setLoggedOffProperties, setLoggedOnProperties,
-createCorsRequest, processServerData,
-MutationObserver */
-
-/**
- *  Place your JS-code here.
- */
- //$(document).ready( function () {
- 'use strict';
+createCorsRequest, createBot */
 
 var MsgControl = new MessageController();
 var ArdeiVars = new VariablesController();
@@ -474,7 +468,7 @@ $('#message').on('keypress', function(event) {
 
 
 /**
- *  Add eventhandler to private message checkpox select all.
+ *  Add eventhandler to private message checkbox select all.
  */
 $('#selectAll').on('click', function() {  //on click
     if ($(this).prop('checked') ) { // check select status
@@ -488,8 +482,10 @@ $('#selectAll').on('click', function() {  //on click
     }
 });
 
+
+// init.
 setLoggedOffProperties(CurrentServer);
 
 console.log('Everything is ready.');
 
-//});
+});

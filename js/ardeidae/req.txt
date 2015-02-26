@@ -1,0 +1,6 @@
+variables.js
+functions.js
+messageController.js
+viewFeedback.js
+userSimul.js
+main.js

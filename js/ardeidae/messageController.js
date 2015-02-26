@@ -1,67 +1,12 @@
-/*globals getHHMM, posts, populateUsersList, MsgControl, nl2br, websocket, userDiv, userCounterDiv */
-
-
+/*globals getHHMM, posts, convertUtcToLocalHHMM, populateUsersList, MsgControl, nl2br, websocket, userDiv, userCounterDiv */
 /**
- *  Populate the users and user counter divs.
+ *  Handling of messages from server.
  */
- var populateUsersList = function(users) {
-    var i,
-          tableRow = '';
-    for ( i = 0; i < users.length; i ++ ) {
-      if (users[i]) {
-        tableRow+= '<tr id="' + users[i].id + '">';
-        tableRow+= '<td>' + users[i].name + '</td>';
-        tableRow+= '<td>' + i + '</td>';
-        tableRow+= '<td><input id="' + users[i].id + '" class="checkboxes" type="checkbox"></td>';
-        tableRow+= '</tr>';
-      }
-    }
-    var tBody = $('#userTable').find('tbody:last');
-    tBody.html('');
-    tBody.append(tableRow);
-};
-
-
-
-/**
- * Generate hours and minutes time-log.
- */
-var getHHMM = function() {
-    var dateRaw = new Date();
-    var now = dateRaw.toLocaleTimeString('en-US', { hour12: false });
-    return now.substring(0, now.length-3);
-};
-
-
-
-/**
- * Convert UTC time to local HHMM.
- */
-var convertUtcToLocalHHMM = function(timestamp) {
-    var utc = new Date(timestamp);
-    var time = utc.toLocaleTimeString('en-US', { hour12: false });
-    return time.substring(0, time.length-3);
-};
-
-
-
-/**
- *  Basic filter for maintaining linebreaks etc.
- */
-var nl2br = function (str) {
-    var breakTag = '<br>';      // (is_xhtml || is_xhtml === 'undefined') ? '<br />' :
-    return (str + ' ').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
-};
-
-
-/**
- * Handling of messages from server.
- */
-function MessageController() {
+var MessageController = function() {
   this.posts = $('#posts');
   this.user = null;
   this.msgCount = null;
-}
+};
 MessageController.prototype = {
 
   addToOutput: function(msg) {

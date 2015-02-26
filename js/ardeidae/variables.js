@@ -1,8 +1,14 @@
-function VariablesController() {
+/**
+ *  Place your JS-code here.
+ */
+ $(document).ready( function () {
+ 'use strict';
+
+var VariablesController = function() {
 
 this.broadcast_protocol = null;
 this.system_protocol = null;
-}
+};
 
 VariablesController.prototype = {
 

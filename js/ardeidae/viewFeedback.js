@@ -1,4 +1,4 @@
-/*globals getHHMM, generateStatus, oddChecker, handler_selectAServer, handler_clickServerListItem */
+/*globals getHHMM, generateStatus, handler_clickServerListItem */
 
 // main page elements.
 var connectArticle = $('#createConnection'),
@@ -11,14 +11,50 @@ var userCounterDiv = $('#userCounter'),
       serverMetaDataDiv = $('#serverMetaData');
 
 
+
 /**
- *  Check if serverListItem is odd or even and assign classname.
+ *  Populate the users and user counter divs.
  */
-var oddChecker = function (count) {
-      if ( count % 2 !== 0 ) {
-          return 'serverItem odd';
+ var populateUsersList = function(users) {
+    var i,
+          tableRow = '';
+    for ( i = 0; i < users.length; i ++ ) {
+      if (users[i]) {
+        tableRow+= '<tr id="' + users[i].id + '">';
+        tableRow+= '<td>' + users[i].name + '</td>';
+        tableRow+= '<td>' + i + '</td>';
+        tableRow+= '<td><input id="' + users[i].id + '" class="checkboxes" type="checkbox"></td>';
+        tableRow+= '</tr>';
       }
-      return 'serverItem';
+    }
+    var tBody = $('#userTable').find('tbody:last');
+    tBody.html('');
+    tBody.append(tableRow);
+};
+
+
+
+/**
+ *  Route the serverlist from AJAX request to relevant function.
+ */
+var serverListRouter = function (li) {
+    if ( li !== null && typeof li === 'string' ) {
+      generateStatus('7', li);
+    }
+
+    if ( li !== null && typeof li === 'object' ) {
+      if ( li.hasOwnProperty('length') ) {
+        if ( li.length === 1 ) {
+          generateStatus('7', 'Recieved server status.');
+          setSelectedServer( li[0] );
+          // populateServerList( li );
+        }
+        if ( li.length > 1 ) {
+          generateStatus('7', 'Refreshed server list.');
+          populateServerList( li );
+        }
+      }
+    }
 };
 
 
@@ -29,6 +65,12 @@ var oddChecker = function (count) {
 var populateServerList = function (list) {
     var i, serverObj, wsUrl, serverItemContents, counter = 0;
     var hubListTable = $('#hubListTable');
+    var oddChecker = function (count) {
+      if ( count % 2 !== 0 ) {
+          return 'serverItem odd';
+      }
+      return 'serverItem';
+    };
 
     hubListTable.html(' ');
 
@@ -51,6 +93,44 @@ var populateServerList = function (list) {
 
 
 /**
+ *  Display the selected server in sidebar.
+ */
+var showServerDataInSidebar = function (currentServerInfo) {
+      var metaData = '<h3>Server Info</h3>'
+          + '<br><h4>' + currentServerInfo.name + '</h4>'
+          + '<br> Online users: ' + currentServerInfo.onlineUsers
+          + '<br> Private mode: ' + currentServerInfo.privateMode
+          + '<br> Domain: ' + currentServerInfo.domain
+          + '<br> Port: ' + currentServerInfo.port
+          + '<br> Version: ' + currentServerInfo.version;
+
+      serverMetaDataDiv.removeClass('hidden')
+      .html(metaData);
+};
+
+
+
+/**
+ *  Set viewing properties specific to server mode.
+ */
+var setServerModeSpecifics = function (cS) {
+    if ( cS.hasOwnProperty('privateMode') ) {
+// Server private mode: true.
+      if ( cS.privateMode ) {
+        $('#connectButton').prop('value', 'privateConnect' );
+        $('#password').removeClass('hidden');
+        // $('#loginButton').removeClass('hidden');
+        $('#registerButton').removeClass('hidden');
+// Server private mode: false.
+      } else {
+        $('#connectButton').prop('value', 'publicConnect');
+      }
+    }
+};
+
+
+
+/**
  *  Set client to specific server.
  */
 var setSelectedServer = function (currentServer) {
@@ -60,15 +140,12 @@ var setSelectedServer = function (currentServer) {
     if ( !currentServer ) {
       console.log("CURENT SERVER IS NOT SET!!!");
       // Reset to no selected server defaults
-      $('#dropDown').prop('value', 'default');
+
       $('input#serverUrl').prop('value', 'ws://');
-      // $('#dropDown').trigger('change');
 
       // Make sure the controlls are hidden.
       $('#connectInputs').addClass('hidden');
       $('#connectbuttonbox').addClass('hidden');
-
-
 
     } else if ( currentServer ) {
 // Server did not respond to Ajax.
@@ -82,31 +159,11 @@ var setSelectedServer = function (currentServer) {
         $('#connectbuttonbox').removeClass('hidden');
 
 // Display the server meta data in sidebar:
-        var metaData = '<h3>Server Info</h3>'
-            + '<br><h4>' + currentServer.name + '</h4>'
-            + '<br> Online users: ' + currentServer.onlineUsers
-            + '<br> Private mode: ' + currentServer.privateMode
-            + '<br> Domain: ' + currentServer.domain
-            + '<br> Port: ' + currentServer.port
-            + '<br> Version: ' + currentServer.version;
-
         userDiv.addClass('hidden');
-        serverMetaDataDiv.removeClass('hidden')
-        .html(metaData);
+        showServerDataInSidebar(currentServer);
 
 // Set the controlls according to server status.
-        if ( currentServer.hasOwnProperty('privateMode') ) {
-// Server private mode: true.
-          if ( currentServer.privateMode ) {
-            $('#connectButton').prop('value', 'privateConnect' );
-            $('#password').removeClass('hidden');
-            // $('#loginButton').removeClass('hidden');
-            $('#registerButton').removeClass('hidden');
-// Server private mode: false.
-          } else {
-            $('#connectButton').prop('value', 'publicConnect');
-          }
-        }
+        setServerModeSpecifics(currentServer);
       }
     }
 };
@@ -126,8 +183,8 @@ var setLoggedOffProperties = function (serverList) {
     messageArticle.addClass('hidden');
     connectArticle.removeClass('hidden');
     $('#disconnect').addClass('hidden');          // hide disconnect button
-    $('#message').prop('value', '');         // Clear message input field.
-    $('#posts').html ('');                         // Clear chat message field.
+    $('#message').prop('value', '');                 // Clear message input field.
+    $('#posts').html ('');                                 // Clear chat message field.
     userCounterDiv.addClass('hidden');
     userTable.addClass('hidden');
     eMail.addClass('hidden');
@@ -141,24 +198,7 @@ var setLoggedOffProperties = function (serverList) {
     serverMetaDataDiv.addClass('hidden');
     // serverURL.disabled='disabled'; // Delete this part if you want the URL input box enabled
 
-    // If the AJAX returns nothing the serverList will be an error message.
-    if ( serverList !== null && typeof serverList === 'string' ) {
-      generateStatus('7', serverList);
-    }
-
-    if ( serverList !== null && typeof serverList === 'object' ) {
-      if ( serverList.hasOwnProperty('length') ) {
-        if ( serverList.length === 1 ) {
-          generateStatus('7', 'Recieved server status.');
-          setSelectedServer( serverList[0] );
-          // populateServerList( serverList );
-        }
-        if ( serverList.length > 1 ) {
-          generateStatus('7', 'Refreshed server list.');
-          populateServerList( serverList );
-        }
-      }
-    }
+    serverListRouter(serverList);
 };
 
 
