@@ -36,9 +36,7 @@
 <p>Enjoy!</p>
                     		</div>
                     		<div id='hubList' class="hidden">
-                    			<div id="hubListTable">
-                    			Searching for active servers on Ardeidae hub... <br> problem with connection.
-                    			</div>
+                    			<div id="hubListTable"></div>
                     		</div>
                         	<header>
                                 		<h1>Get Connected</h1>
