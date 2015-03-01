@@ -15,7 +15,6 @@ var id_userCounter = $('#userCounter'),
 
 
 
-
 /**
  *  Populate the users and user counter divs.
  */
