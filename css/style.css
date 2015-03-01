@@ -236,6 +236,7 @@ p {background-color: inherit;}
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
+    position: relative;
 }
 
 .mainPageContainer {
@@ -382,10 +383,12 @@ p {background-color: inherit;}
 
 
 #output {
+    width: 90%;
     border-top: 1px dotted #B0BF74;
     margin-top: 0em;
-    width: 100%;
     height: 185px;
     overflow: auto;
     font-size: 10px;
+    position: absolute;
+    bottom: 0;
 }

@@ -43,10 +43,6 @@ var id_userCounter = $('#userCounter'),
  */
 var populateServerList = function (list) {
     var i, serverObj, wsUrl, serverItemContents, counter = 0;
-
-    id_welcome.addClass('hidden');
-    id_hubList.removeClass('hidden');
-
     var id_hubListTable = $('#hubListTable');
 
     var oddChecker = function (count) {
@@ -56,6 +52,8 @@ var populateServerList = function (list) {
       return 'serverItem';
     };
 
+    id_welcome.addClass('hidden');
+    id_hubList.removeClass('hidden');
     id_hubListTable.html(' ');
 
     for ( i = 0; i < list.length; i++ ) {
@@ -69,7 +67,7 @@ var populateServerList = function (list) {
 
       $('<div/>', {
       }).html(serverItemContents)
-          .appendTo('#hubListTable')
+          .appendTo(id_hubListTable)
           .on('click', handler_clickServerListItem);
     }
 };
@@ -123,7 +121,7 @@ var setSelectedServer = function (currentServer) {
     $('#connectbuttonbox').removeClass('hidden');
 
 // Display the server meta data in sidebar:
-                                                                    id_userList.addClass('hidden');
+         //                                                           id_userList.addClass('hidden');
     showServerDataInSidebar(currentServer);
 
 // Set the controlls according to server status.
@@ -148,11 +146,9 @@ var serverListRouter = function (li) {
         if ( li.length === 1 ) {
           generateStatus('7', 'Recieved server status.');
 
-// Settings depending on server meta data:
-          if ( !li[0].hasOwnProperty('Name') ) {
+          if ( !li[0].hasOwnProperty('name') ) {
             generateStatus('7', 'Server status invalid.');
           } else {
-// Server responded to ajax.
             setSelectedServer( li[0] );
             // populateServerList( li );
           }
@@ -178,29 +174,29 @@ var setLoggedOffProperties = function (serverList) {
     $('#disconnect').addClass('hidden');          // hide disconnect button
 
     // Page elements.
+    id_welcome.removeClass('hidden');
     id_createMessage.addClass('hidden');
     id_createConnection.removeClass('hidden');
     id_posts.html ('');
-                                                                    id_userList.removeClass('hidden');          // Only to maintain layout. Confusing.
-    id_serverMetaData.addClass('hidden');
 
     // Sidebar elements.
     id_userCounter.addClass('hidden');
+    id_userList.addClass('hidden');
     id_userTable.addClass('hidden');
+    id_serverMetaData.addClass('hidden');
 
     // Inputs
     $('eMail').addClass('hidden');
     $('eMail').prop('value', null);
     $('#message').prop('value', '');                 // Clear message input field.
 
-    $('input#serverUrl').prop('value', 'ws://');
+    // $('input#serverUrl').prop('value', 'ws://');
     $('#connectInputs').addClass('hidden');
     $('#connectbuttonbox').addClass('hidden');
     $('#password').addClass('hidden');
     $('#registerButton').addClass('hidden');
     // serverURL.disabled='disabled'; // Delete this part if you want the URL input box enabled
-
-    serverListRouter(serverList);
+    // serverListRouter(serverList);
 };
 
 

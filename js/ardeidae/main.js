@@ -2,12 +2,12 @@
 MsgControl, VariablesController, FunctionController, MessageController, ConnectionController,
 websocket: true, wsSystem: true, wsLogin: true,
 generateStatus, setLoggedOffProperties, setLoggedOnProperties,
-createCorsRequest, createBot */
+createCorsRequest, serverListRouter, createBot */
 
 var MsgControl = new MessageController();
 var ArdeiVars = new VariablesController();
 // var ArdeiFunc = new FunctionController();
-var CurrentServer = null;
+
 
 var websocket,
       wsSystem,
@@ -84,7 +84,7 @@ var createCorsRequest = function (method, url, callback) {
     var serverDomainUrl = url.slice(5, url.length).split(':');
 // This is to get server meta data.
     generateStatus('7', 'waiting for server at ' + serverDomainUrl[0] + '<br>timeout is: 10sec.');
-    createCorsRequest( 'GET', url, setLoggedOffProperties );
+    createCorsRequest( 'GET', url, serverListRouter );
     if ( event.hasOwnProperty('preventDefault') ) {
       event.preventDefault();
     }
@@ -114,19 +114,13 @@ var handler_clickServerListItem = function (event) {
  *  Eventhandler for server refresh button and hubList.
  */
  $('#refreshButton0').on('click', function() {
-    createCorsRequest( 'GET', 'ws://localhost:8121', setLoggedOffProperties );
-    ArdeiVars.resetProtocols();
-    // setEventhandlers();
+    createCorsRequest( 'GET', 'ws://localhost:8121', serverListRouter );
 });
 $('#refreshButton1').on('click', function() {
-    createCorsRequest( 'GET', 'ws://nodejs1.student.bth.se:8121', setLoggedOffProperties );
-    ArdeiVars.resetProtocols();
-    // setEventhandlers();
+    createCorsRequest( 'GET', 'ws://nodejs1.student.bth.se:8121', serverListRouter );
 });
 $('#refreshButton2').on('click', function() {
-    createCorsRequest( 'GET', 'ws://nodejs2.student.bth.se:8121', setLoggedOffProperties );
-    ArdeiVars.resetProtocols();
-    // setEventhandlers();
+    createCorsRequest( 'GET', 'ws://nodejs2.student.bth.se:8121', serverListRouter );
 });
 
 
@@ -175,6 +169,7 @@ $('body').on('click', 'button#connectButton', function (event) {
  */
 $(document).on('newConnection', function ( event, arg1 ) {
     if ( !arg1 ) { arg1 = 'publicConnect'; }
+
     console.log('Connection controller argument is: ' + arg1);
     var url = $('input#serverUrl').prop('value');
     var userName = $('#userName').prop('value');
@@ -189,7 +184,6 @@ $(document).on('newConnection', function ( event, arg1 ) {
     $('#send').off('click');
     $('#disconnect').off('click');
     $('#botButton').off('click');
-    // $('#registerConnect').off('click');
 
 // Check if websocket is already established, close if true.
     if ( websocket ) {
@@ -231,6 +225,7 @@ $(document).on('newConnection', function ( event, arg1 ) {
 // open server connect.
     else if ( arg1 === 'publicConnect' ) {    // default protocols for open server.
       console.log('Connecting to: ' + url + ' With username: ' + userName + ' and with default protocols.');
+      ArdeiVars.resetProtocols();
       generateStatus('1');
 
       websocket = new WebSocket( url, ArdeiVars.getBcProtocol() );
@@ -478,7 +473,7 @@ $('#selectAll').on('click', function() {  //on click
 
 
 // init.
-setLoggedOffProperties(CurrentServer);
+setLoggedOffProperties();
 
 console.log('Everything is ready.');
 

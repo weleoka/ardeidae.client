@@ -321,6 +321,7 @@ a:hover {
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
+    position: relative;
 }
 
 .mainPageContainer {
@@ -473,10 +474,12 @@ a:hover {
 }
 #output {
     margin-top: 0em;
-    width: 100%;
+    width: 90%;
     height: 185px;
     overflow: auto;
     font-size: 10px;
+    position: absolute;
+    bottom: 0;
 }
 
 
