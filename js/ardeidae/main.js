@@ -13,6 +13,11 @@ var websocket,
       wsSystem,
       wsLogin;
 
+// Address for ardeidae hub. For development. Production needs only one address for a hub.
+var addressOne = 'ws://localhost:8121';
+var addressTwo = 'ws://nodejs1.student.bth.se:8121';
+var addressThree = 'ws://nodejs2.student.bth.se:8121';
+
 
 
 /**
@@ -68,7 +73,7 @@ var createCorsRequest = function (method, url, callback) {
             console.log(humanReadable);
         }
         callback(humanReadable);
-    },
+    }
   });
 
 };
@@ -114,13 +119,13 @@ var handler_clickServerListItem = function (event) {
  *  Eventhandler for server refresh button and hubList.
  */
  $('#refreshButton0').on('click', function() {
-    createCorsRequest( 'GET', 'ws://localhost:8121', serverListRouter );
+    createCorsRequest( 'GET', addressOne, serverListRouter );
 });
 $('#refreshButton1').on('click', function() {
-    createCorsRequest( 'GET', 'ws://nodejs1.student.bth.se:8121', serverListRouter );
+    createCorsRequest( 'GET', addressTwo, serverListRouter );
 });
 $('#refreshButton2').on('click', function() {
-    createCorsRequest( 'GET', 'ws://nodejs2.student.bth.se:8121', serverListRouter );
+    createCorsRequest( 'GET', addressThree, serverListRouter );
 });
 
 

@@ -16,12 +16,13 @@ MessageController.prototype = {
       if (this.msgCount % 2 !== 0) {
           newPost.className = 'odd';
       }
-      // For example private messages.
+      // Private messages.
       if ( msg.attributes ) {
         newPost.className += ' ' + msg.attributes;
       }
-      newPost.innerHTML = getHHMM() + ' ' + msg.name + ': ' + nl2br(msg.message);
-      if ( !msg.name ) {
+      if ( msg.name ) {
+        newPost.innerHTML = getHHMM() + ' ' + msg.name + ': ' + nl2br(msg.message);
+      } else {
         newPost.innerHTML = nl2br(msg.message);
       }
 

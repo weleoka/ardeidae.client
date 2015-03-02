@@ -31,5 +31,5 @@ VariablesController.prototype = {
   resetProtocols: function () {
       this.broadcast_protocol = 'broadcast-protocol';
       this.system_protocol = 'system-protocol';
-  },
+  }
 };

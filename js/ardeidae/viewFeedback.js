@@ -20,8 +20,9 @@ var id_userCounter = $('#userCounter'),
  */
  var populateUsersList = function(users) {
     var i,
-          tableRow = '';
-    for ( i = 0; i < users.length; i ++ ) {
+          tableRow = '',
+          usersLength = users.length;
+    for ( i = 0; i < usersLength; i ++ ) {
       if (users[i]) {
         tableRow+= '<tr id="' + users[i].id + '">';
         tableRow+= '<td>' + users[i].name + '</td>';
@@ -41,6 +42,7 @@ var id_userCounter = $('#userCounter'),
  *  Display all the servers online from the hub.
  */
 var populateServerList = function (list) {
+    var listLength = list.length;
     var i, serverObj, wsUrl, serverItemContents, counter = 0;
     var id_hubListTable = $('#hubListTable');
 
@@ -55,7 +57,7 @@ var populateServerList = function (list) {
     id_hubList.removeClass('hidden');
     id_hubListTable.html(' ');
 
-    for ( i = 0; i < list.length; i++ ) {
+    for ( i = 0; i < listLength; i++ ) {
       counter++;
       serverObj = list[i];
       list[i].uptime =  Math.floor(serverObj.uptime / 60000 );
@@ -163,10 +165,9 @@ var serverListRouter = function (li) {
 
 
 /**
- *  Set viewing properties for JS-enabled browser LOGGED OFF.
+ *  Set viewing properties LOGGED OFF.
  */
-var setLoggedOffProperties = function (serverList) {
-    console.log(serverList);
+var setLoggedOffProperties = function () {
 
     // Header elements.
     $('#status').html('No connection.');
@@ -195,7 +196,6 @@ var setLoggedOffProperties = function (serverList) {
     $('#password').addClass('hidden');
     $('#registerButton').addClass('hidden');
     // serverURL.disabled='disabled'; // Delete this part if you want the URL input box enabled
-    // serverListRouter(serverList);
 };
 
 
