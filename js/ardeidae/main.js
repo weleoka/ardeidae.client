@@ -365,34 +365,51 @@ $('#send').on('click', function (event) {
   var content = $('#message').prop('value');
   var reciever = [];
 
-  $('input.checkboxes').each( function() {  // check if message private and which recievers.
-         if($(this).prop('checked')) {
-                  reciever.push($(this).prop('id'));
-         }
-  });
+  // Check if there is a message. Otherwise return.
+  if ( content.length > 0 ) {
 
-  if ( !websocket || websocket.readyState === 3) {
-    console.log('The websocket is not connected to a server.');
-    // generateStatus('6');
-  } else {
-    console.log(reciever);
-    if ( reciever.length === 0 ) {
-      console.log("Sending message: " + content);
-      websocket.send(
-              MsgControl.newMsg( content )
-      );
-      generateStatus('3');
+    $('input.checkboxes').each( function() {  // check if message private and which recievers.
+           if($(this).prop('checked')) {
+                    reciever.push($(this).prop('id'));
+           }
+    });
+
+    if ( !websocket || websocket.readyState === 3) {
+      console.log('The websocket is not connected to a server.');
+      // generateStatus('6');
     } else {
-      console.log("Sending private message: " + content);
-      websocket.send(
-              MsgControl.newPrivateMsg( content, reciever )
-      );
-      generateStatus('8');
-    }
+      console.log(reciever);
+      if ( reciever.length === 0 ) {
+        console.log("Sending message: " + content);
+        websocket.send(
+                MsgControl.newMsg( content )
+        );
+        generateStatus('3');
+      } else {
+        console.log("Sending private message: " + content);
+        websocket.send(
+                MsgControl.newPrivateMsg( content, reciever )
+        );
+        generateStatus('8');
+      }
 
-    $('#message').prop('value', '');       // blank out the message input field after sending message.
-  }
+      $('#message').prop('value', '');       // blank out the message input field after sending message.
+    }
+  } // closing the empty message testing case.
   event.preventDefault();
+});
+
+
+
+/**
+ *  Add eventhandler to message input field to trigger send button on enter,
+ *  or newline break if shift + enter.
+ */
+$('#message').on('keypress', function(event) {
+    if (event.keyCode === 13 && !event.shiftKey) {
+      $('#send').trigger('click');
+      event.preventDefault();
+    }
 });
 
 
@@ -444,19 +461,6 @@ $('#stylesheetButton').on('click', function (event) {
     $('#activeCss').prop('href', 'css/style.css');
   }
   event.preventDefault();
-});
-
-
-
-/**
- *  Add eventhandler to message input field to trigger send button on enter,
- *  or newline break if shift + enter.
- */
-$('#message').on('keypress', function(event) {
-    if (event.keyCode === 13 && !event.shiftKey) {
-      $('#send').trigger('click');
-      event.preventDefault();
-    }
 });
 
 

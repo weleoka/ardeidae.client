@@ -37,6 +37,7 @@ $ npm install ardeidae
 ### Current Features of Ardeidae client:
 * After selecting a server the client makes a request to the server and adapts GUI depending on what the servers responds. If the server is in public or private mode the password field will be visible or not. The same for registering new user. The request is made using ajax and is set up to enable CORS.
 * Maintain linebreaks in messages (alt + enter).
+* No sending of blank messages.
 * Quick posting and login, accepts keyboard navigation.
 * Private messaging to single or multiple peers.
 * Visual feedback on operations and progress.
@@ -54,7 +55,6 @@ Functionality:
 
 * Chat room support.
 * Should be re-written mobile first.
-* Stop users sending blank messages.
 * Switch on and off server logging of your messages.
 * A way to retrieve conversations to review historic message exchanges.
 
