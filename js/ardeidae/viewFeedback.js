@@ -66,8 +66,8 @@ var populateServerList = function (list) {
         + '- ' + serverObj.name + ' - '
         + ' ' + serverObj.domain + '</div>';
 
-      $('<div/>', {
-      }).html(serverItemContents)
+      $('<div/>')
+          .html(serverItemContents)
           .appendTo(id_hubListTable)
           .on('click', handler_clickServerListItem);
     }

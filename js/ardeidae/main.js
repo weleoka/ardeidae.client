@@ -140,13 +140,17 @@ $('body').on('keypress', 'input#userName', function(event) {
     if (event.keyCode === 13) {
       var connectionType = $('#connectButton').prop('value');
       $.event.trigger( 'newConnection', connectionType );
-      event.preventDefault();
+      if ( event.hasOwnProperty('preventDefault') ) {
+        event.preventDefault();
+      }
     }
 });
 $('body').on('keypress', 'input#password', function(event) {
     if (event.keyCode === 13) {
       $.event.trigger('newConnection', 'privateConnect');
-      event.preventDefault();
+      if ( event.hasOwnProperty('preventDefault') ) {
+        event.preventDefault();
+      }
     }
 });
 
@@ -365,7 +369,7 @@ $('#send').on('click', function (event) {
   var content = $('#message').prop('value');
   var reciever = [];
 
-  // Check if there is a message. Otherwise return.
+  // Check if there is a message.
   if ( content.length > 0 ) {
 
     $('input.checkboxes').each( function() {  // check if message private and which recievers.

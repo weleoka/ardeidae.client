@@ -80,6 +80,8 @@ If you'd like to contribute to Ardeidae's development, start by forking the GitH
 
 https://github.com/weleoka/ardeidae_client.git
 
+Have a look at the known issues and missing features and take a pick or find something else that needs doing.
+
 The best way to get your changes merged back is as follows:
 
 1. Clone your fork
